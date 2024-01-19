@@ -13,12 +13,29 @@ class Colonie {
 class Herbe {
     constructor() {
         this.type = "herbe";
-        this.pheromone = 0;
+        this.pheromone = 0.001;
     }
 
     incrementPheromone() {
-        this.pheromone += 0.1;
+        this.pheromone += 0.001;
     }
+
+
+    class Herbe {
+        constructor() {
+            this.type = "herbe";
+            this.pheromone = 0.001;
+        }
+
+        incrementPheromone() {
+            this.pheromone += 0.001;
+        }
+
+        decrementPheromone() {
+            this.pheromone -= 0.001;
+        }
+    }
+
 }
 
 class Nourriture {
@@ -89,7 +106,6 @@ class View {
     }
     
     display(grid){
-        let pheromone = 0.001;
         let nbLines = grid.length;
         let nbColumns = grid[0].length;
         this.canvas.width = nbColumns * this.cellSize;
@@ -100,7 +116,6 @@ class View {
         for (let i = 0; i < grid.length; i++) {
             for (let j = 0; j < grid[i].length; j++) {
                 let tile = grid[i][j];
-                console.log(tile.type);
                 switch (tile.type) {
                     case "herbe":
                         let randX = Math.floor(Math.random() * 8);
@@ -112,8 +127,7 @@ class View {
                             this.ctx.fillStyle = "white";
                             this.ctx.fillText(pheromone.toFixed(2), j * this.cellSize + 15, i * this.cellSize + this.cellSize / 2  + 6);
                         } else {
-                            let radius = 1 + Math.log10(pheromone * (10 - 1) + 1) * ((this.cellSize - 5) / 2) ;
-                            console.log(radius);
+                            let radius = 1 + Math.log10(tile.pheromone * (10 - 1) + 1) * ((this.cellSize - 5) / 2) ;
 
                             this.ctx.beginPath();
                             this.ctx.arc(j * this.cellSize + this.cellSize / 2, i * this.cellSize + this.cellSize / 2, radius, 0, 2 * Math.PI);
