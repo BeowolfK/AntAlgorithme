@@ -17,7 +17,7 @@ class Herbe {
     }
 
     incrementPheromone() {
-        this.pheromone += 0.001;
+        this.pheromone += 0.01;
     }
 
     decrementPheromone() {
@@ -39,7 +39,6 @@ class Nourriture {
 
 class Model {
     constructor() {
-        // 0 = arbre, 1 = herbe, 2 = nourriture, 3 = colonie
         this.grid = [
             [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
             [new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
@@ -59,6 +58,7 @@ class Model {
             [new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Herbe(), new Nourriture(), new Herbe(), new Herbe(), new Arbre()],
             [new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Nourriture(), new Arbre(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
             [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()]
+        
         ];
         this.time = "00:00";
     }
@@ -76,12 +76,13 @@ class Model {
     }
 
     resetTime() {
+        clearInterval(this.counter);
         this.time = "00:00";
         this.displayTime(this.time);
     }
 
     getTime() {
-        setInterval(() => { 
+        this.counter = setInterval(() => { 
             let time = this.time.split(":");
             let minutes = parseInt(time[0]);
             let seconds = parseInt(time[1]);    
@@ -105,7 +106,7 @@ class View {
 
         this.cellSize = 47;
         this.statusTime = false;
-        this.statusPheromone = false;
+        this.statusPheromone = true;
         this.toggleClock();
         this.togglePheromone();
     }
@@ -118,19 +119,19 @@ class View {
         this.ctx.fillStyle = "#72751b";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        for (let i = 0; i < grid.length; i++) {
-            for (let j = 0; j < grid[i].length; j++) {
+        for (let i = grid.length - 1; i >= 0; i--) {
+            for (let j = grid[i].length - 1; j >= 0; j--) {
                 let tile = grid[i][j];
                 switch (tile.type) {
                     case "herbe":
-                        let randX = Math.floor(Math.random() * 8);
-                        let randY = Math.floor(Math.random() * 4);
-                        this.ctx.drawImage(GRASS_IMAGE, randX * 16, randY * 16, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
+                        let randX = 4 + i % 4;
+                        let randY = j % 4;
+                        this.ctx.drawImage(GRASS_IMAGE, randX * 32, randY * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
 
                         if (this.statusPheromone) {
                             this.ctx.font = "12px Arial";
                             this.ctx.fillStyle = "white";
-                            this.ctx.fillText(pheromone.toFixed(2), j * this.cellSize + 15, i * this.cellSize + this.cellSize / 2  + 6);
+                            this.ctx.fillText(tile.pheromone.toFixed(2), j * this.cellSize + 15, i * this.cellSize + this.cellSize / 2  + 6);
                         } else {
                             let radius = 1 + Math.log10(tile.pheromone * (10 - 1) + 1) * ((this.cellSize - 5) / 2) ;
 
@@ -143,8 +144,8 @@ class View {
                         }
                         break;
                     case "arbre":
-                        this.ctx.drawImage(SHADOW_IMAGE, 0, 32, 128, 128, j * this.cellSize, i * this.cellSize + 10, this.cellSize, this.cellSize);
-                        this.ctx.drawImage(TREE_IMAGE, 0, 0, 128, 128, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
+                        this.ctx.drawImage(SHADOW_IMAGE, 0, 32, 128, 128, j * this.cellSize - 5, i * this.cellSize , this.cellSize, this.cellSize);
+                        this.ctx.drawImage(TREE_IMAGE, 0, 0, 160, 160, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize); // 160x160
                         break;
                     case "nourriture":
                         this.ctx.drawImage(HEXTILES_IMAGE, 0 * 32, 14 * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
@@ -198,6 +199,7 @@ class View {
                 this.statusPheromone = true;
                 statusP.innerHTML = "Valeur";
             }
+            // this.displayPheromone();
         });
     }
 
