@@ -13,7 +13,7 @@ class Colonie {
 class Herbe {
     constructor() {
         this.type = "herbe";
-        this.pheromone = 0.001;
+        this.pheromone = 0;
     }
 
     incrementPheromone() {
@@ -85,7 +85,7 @@ class Model {
         this.counter = setInterval(() => { 
             let time = this.time.split(":");
             let minutes = parseInt(time[0]);
-            let seconds = parseInt(time[1]);    
+            let seconds = parseInt(time[1]);
 
             seconds += 1;
             if (seconds == 60) {
@@ -119,6 +119,7 @@ class View {
         this.ctx.fillStyle = "#72751b";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
+
         for (let i = grid.length - 1; i >= 0; i--) {
             for (let j = grid[i].length - 1; j >= 0; j--) {
                 let tile = grid[i][j];
@@ -128,17 +129,16 @@ class View {
                         let randY = j % 4;
                         this.ctx.drawImage(GRASS_IMAGE, randX * 32, randY * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
 
+                        let proportional = Math.log10(tile.pheromone * (10 - 1) + 1) * ((this.cellSize - 5) / 2) ;
+
                         if (this.statusPheromone) {
-                            this.ctx.font = "12px Arial";
-                            this.ctx.fillStyle = "white";
-                            this.ctx.fillText(tile.pheromone.toFixed(2), j * this.cellSize + 15, i * this.cellSize + this.cellSize / 2  + 6);
+                            this.ctx.font = "bold 14px Arial";
+                            this.ctx.fillStyle = this.colorChooser(proportional);
+                            this.ctx.fillText(tile.pheromone, j * this.cellSize + 15, i * this.cellSize + this.cellSize / 2  + 6);
                         } else {
-                            let radius = 1 + Math.log10(tile.pheromone * (10 - 1) + 1) * ((this.cellSize - 5) / 2) ;
-
                             this.ctx.beginPath();
-                            this.ctx.arc(j * this.cellSize + this.cellSize / 2, i * this.cellSize + this.cellSize / 2, radius, 0, 2 * Math.PI);
-                            this.ctx.fillStyle = "#ffffff";
-
+                            this.ctx.arc(j * this.cellSize + this.cellSize / 2, i * this.cellSize + this.cellSize / 2, proportional, 0, 2 * Math.PI);
+                            this.ctx.fillStyle = this.colorChooser(proportional);
                             this.ctx.fill();
                             this.ctx.closePath();
                         }
@@ -198,8 +198,33 @@ class View {
                 this.statusPheromone = true;
                 statusP.innerHTML = "Valeur";
             }
-            // this.displayPheromone();
         });
+    }
+
+    colorChooser(value) {
+        let color = "";
+        if(value > 20){
+            color = "#7a0014";
+        } else if (value > 18) {
+            color = "purple";
+        } else if (value > 16) {
+            color = "#ff00ff";
+        } else if (value > 14) {
+            color = "#8c3ddb";
+        } else if (value > 12) {
+            color = "#535ce0";
+        } else if (value > 10) {
+            color = "#727af2";
+        }else if (value > 8) {
+            color = "#858cf2";
+        }else if (value > 6) {
+            color = "#a5aafa";
+        }else if (value > 4) {
+            color = "#c8cbfa";
+        }else {
+            color = "#ffffff";
+        }
+        return color;
     }
 
 }
