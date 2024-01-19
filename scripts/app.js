@@ -1,25 +1,60 @@
+class Arbre {
+    constructor() {
+        this.type = "arbre";
+    }
+}
+
+class Colonie {
+    constructor() {
+        this.type = "colonie";
+    }
+}
+
+class Herbe {
+    constructor() {
+        this.type = "herbe";
+        this.pheromone = 0;
+    }
+
+    incrementPheromone() {
+        this.pheromone += 0.1;
+    }
+}
+
+class Nourriture {
+    constructor() {
+        this.type = "nourriture";
+        this.etat = 100;
+    }
+
+    decrementEtat() {
+        this.etat -= 1;
+    }
+}
+
+
 class Model {
     constructor() {
         // 0 = arbre, 1 = herbe, 2 = nourriture, 3 = colonie
         this.grid = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1 ,1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 2, 0],
-            [0, 2, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0],
-            [0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0],
-            [0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0],
-            [0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0],
-            [0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0 ,0 ,0 ,0],
-            [0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0 ,0 ,0],
-            [0, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 0, 0, 1, 0, 0 ,0 ,0],
-            [0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0],
-            [0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0],
-            [0, 1, 0, 1, 0 ,1, 0, 0, 1, 0, 1, 0, 1, 1, 2, 1, 1, 0],
-            [0, 1, 1, 1, 0, 2, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
+            [new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
+            [new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Nourriture(), new Arbre()],
+            [new Arbre(), new Nourriture(), new Herbe(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre()],
+            [new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre()],
+            [new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Herbe(), new Herbe(), new Herbe(), new Arbre()],
+            [new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
+            [new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
+            [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
+            [new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Herbe(), new Herbe(), new Herbe(), new Herbe(), new Herbe(), new Colonie(), new Herbe(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
+            [new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
+            [new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
+            [new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
+            [new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Herbe(), new Herbe(), new Arbre()],
+            [new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre()],
+            [new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Herbe(), new Nourriture(), new Herbe(), new Herbe(), new Arbre()],
+            [new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Nourriture(), new Arbre(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
+            [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()]
         ];
         this.time = "00:05";
     }
@@ -65,33 +100,41 @@ class View {
         for (let i = 0; i < grid.length; i++) {
             for (let j = 0; j < grid[i].length; j++) {
                 let tile = grid[i][j];
-                if (tile === 1) {
-                    let randX = Math.floor(Math.random() * 8);
-                    let randY = Math.floor(Math.random() * 4);
-                    this.ctx.drawImage(GRASS_IMAGE, randX * 16, randY * 16, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
+                console.log(tile.type);
+                switch (tile.type) {
+                    case "herbe":
+                        let randX = Math.floor(Math.random() * 8);
+                        let randY = Math.floor(Math.random() * 4);
+                        this.ctx.drawImage(GRASS_IMAGE, randX * 16, randY * 16, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
 
-                    if (this.statusPheromone) {
-                        this.ctx.font = "12px Arial";
-                        this.ctx.fillStyle = "white";
-                        this.ctx.fillText(pheromone.toFixed(2), j * this.cellSize + 15, i * this.cellSize + this.cellSize / 2  + 6);
-                    } else {
-                        let radius = 1 + Math.log10(pheromone * (10 - 1) + 1) * ((this.cellSize - 5) / 2) ;
-                        console.log(radius);
+                        if (this.statusPheromone) {
+                            this.ctx.font = "12px Arial";
+                            this.ctx.fillStyle = "white";
+                            this.ctx.fillText(pheromone.toFixed(2), j * this.cellSize + 15, i * this.cellSize + this.cellSize / 2  + 6);
+                        } else {
+                            let radius = 1 + Math.log10(pheromone * (10 - 1) + 1) * ((this.cellSize - 5) / 2) ;
+                            console.log(radius);
 
-                        this.ctx.beginPath();
-                        this.ctx.arc(j * this.cellSize + this.cellSize / 2, i * this.cellSize + this.cellSize / 2, radius, 0, 2 * Math.PI);
-                        this.ctx.fillStyle = "#ffffff";
+                            this.ctx.beginPath();
+                            this.ctx.arc(j * this.cellSize + this.cellSize / 2, i * this.cellSize + this.cellSize / 2, radius, 0, 2 * Math.PI);
+                            this.ctx.fillStyle = "#ffffff";
 
-                        this.ctx.fill();
-                        this.ctx.closePath();
-                    } 
-                } else if (tile === 0) {
-                    this.ctx.drawImage(SHADOW_IMAGE, 0, 32, 128, 128, j * this.cellSize, i * this.cellSize + 10, this.cellSize, this.cellSize);
-                    this.ctx.drawImage(TREE_IMAGE, 0, 0, 128, 128, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
-                } else if (tile === 2) {
-                    this.ctx.drawImage(HEXTILES_IMAGE, 0 * 32, 14 * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
-                } else if (tile === 3) {
-                    this.ctx.drawImage(HEXTILES_IMAGE, 1 * 32, 20 * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
+                            this.ctx.fill();
+                            this.ctx.closePath();
+                        }
+                        break;
+                    case "arbre":
+                        this.ctx.drawImage(SHADOW_IMAGE, 0, 32, 128, 128, j * this.cellSize, i * this.cellSize + 10, this.cellSize, this.cellSize);
+                        this.ctx.drawImage(TREE_IMAGE, 0, 0, 128, 128, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
+                        break;
+                    case "nourriture":
+                        this.ctx.drawImage(HEXTILES_IMAGE, 0 * 32, 14 * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
+                        break;
+                    case "colonie":
+                        this.ctx.drawImage(HEXTILES_IMAGE, 1 * 32, 20 * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
+                        break;
+                    default:
+                        console.error("Error: Invalid tile - " + tile);
                 }
             }
         }
