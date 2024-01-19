@@ -105,7 +105,7 @@ class View {
 
         this.cellSize = 47;
         this.statusTime = false;
-        this.statusPheromone = false;
+        this.statusPheromone = false;    
         this.toggleClock();
         this.togglePheromone();
     }
@@ -118,8 +118,8 @@ class View {
         this.ctx.fillStyle = "#72751b";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        for (let i = 0; i < grid.length; i++) {
-            for (let j = 0; j < grid[i].length; j++) {
+        for (let i = grid.length - 1; i >= 0; i--) {
+            for (let j = grid[i].length - 1; j >= 0; j--) {
                 let tile = grid[i][j];
                 switch (tile.type) {
                     case "herbe":
@@ -130,7 +130,7 @@ class View {
                         if (this.statusPheromone) {
                             this.ctx.font = "12px Arial";
                             this.ctx.fillStyle = "white";
-                            this.ctx.fillText(pheromone.toFixed(2), j * this.cellSize + 15, i * this.cellSize + this.cellSize / 2  + 6);
+                            this.ctx.fillText(tile.pheromone.toFixed(2), j * this.cellSize + 15, i * this.cellSize + this.cellSize / 2  + 6);
                         } else {
                             let radius = 1 + Math.log10(tile.pheromone * (10 - 1) + 1) * ((this.cellSize - 5) / 2) ;
 
@@ -144,7 +144,7 @@ class View {
                         break;
                     case "arbre":
                         this.ctx.drawImage(SHADOW_IMAGE, 0, 32, 128, 128, j * this.cellSize, i * this.cellSize + 10, this.cellSize, this.cellSize);
-                        this.ctx.drawImage(TREE_IMAGE, 0, 0, 128, 128, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
+                        this.ctx.drawImage(TREE_IMAGE, 0, 0, 128, 128, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize); // 160x160
                         break;
                     case "nourriture":
                         this.ctx.drawImage(HEXTILES_IMAGE, 0 * 32, 14 * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
@@ -197,6 +197,7 @@ class View {
                 this.statusPheromone = true;
                 statusP.innerHTML = "Valeur";
             }
+            // this.displayPheromone();
         });
     }
 
