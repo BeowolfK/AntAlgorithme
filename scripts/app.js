@@ -76,12 +76,13 @@ class Model {
     }
 
     resetTime() {
+        clearInterval(this.counter);
         this.time = "00:00";
         this.displayTime(this.time);
     }
 
     getTime() {
-        setInterval(() => { 
+        this.counter = setInterval(() => { 
             let time = this.time.split(":");
             let minutes = parseInt(time[0]);
             let seconds = parseInt(time[1]);    
