@@ -76,6 +76,7 @@ class Model {
     }
 
     getTime() {
+        console.log(this.time);
         this.displayTime(this.time);
     }
 }
@@ -146,6 +147,7 @@ class View {
     }
 
     displayTime(time) {
+        console.log(time);
         let clock = document.getElementById('clock');
         clock.innerHTML = time;
     }
@@ -161,7 +163,7 @@ class View {
             } else {
                 this.statusTime = true;
                 statusB.innerHTML = "Stop";
-                clock.innerHTML = this.getTime();
+                this.getTime();
             }
         });
     }
@@ -187,14 +189,14 @@ class Controller {
         this.view = view
 
         this.model.bindDisplay(this.bindDisplay.bind(this))
-        this.model.play()
-
+        
         this.bindDisplayTime = this.bindDisplayTime.bind(this);
         this.model.bindDisplayTime(this.bindDisplayTime);
 
         this.bindGetTime = this.bindGetTime.bind(this);
         this.view.bindGetTime(this.bindGetTime);
 
+        this.model.play();
     }
 
     bindDisplay(grid) {
@@ -206,7 +208,7 @@ class Controller {
     }
 
     bindGetTime() {
-            this.model.getTime();
+        this.model.getTime();
     }
 
 }
