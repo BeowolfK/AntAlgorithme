@@ -20,22 +20,9 @@ class Herbe {
         this.pheromone += 0.001;
     }
 
-
-    class Herbe {
-        constructor() {
-            this.type = "herbe";
-            this.pheromone = 0.001;
-        }
-
-        incrementPheromone() {
-            this.pheromone += 0.001;
-        }
-
-        decrementPheromone() {
-            this.pheromone -= 0.001;
-        }
+    decrementPheromone() {
+        this.pheromone -= 0.001;
     }
-
 }
 
 class Nourriture {
