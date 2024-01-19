@@ -161,7 +161,7 @@ class View {
             } else {
                 this.statusTime = true;
                 statusB.innerHTML = "Stop";
-                clock.innerHTML = this.getTime();
+                this.getTime();
             }
         });
     }
