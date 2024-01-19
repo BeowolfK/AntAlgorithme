@@ -61,6 +61,17 @@ class Model {
             [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()]
         ];
         this.time = "00:00";
+        
+        // Mouvement
+        this._startTime     = Date.now();
+        this._lag           = 0;
+        this._fps           = 60; // Frame rate.
+        this._frameDuration = 1000 / this._fps;
+        this._position      = {x: 9, y:10};
+        this._cellSize      = 100; // La taille d'une cellule en pixel.
+        this._speed         = 10; // Nous voulons que 1 cellule (de notre grille) soit parcourue en 1 seconde (doit être dépendant des FPS fixés car la fonction est appelée à chaque frame). Notre unité de vitesse est donc "le nombre de cellules de la grille parcourues/seconde".
+        this._direction     = 1; // En radian.
+        this._timer         = 0;
     }
 
     bindDisplay(callback) {
@@ -68,7 +79,8 @@ class Model {
     }
 
     play() {
-        this.display(this.grid);
+        this.display(this.grid, this._position);
+        this.update();
     }
 
     bindDisplayTime(callback) {
@@ -96,6 +108,44 @@ class Model {
             this.displayTime(this.time);
         }, 1000);
     }
+
+    move = function(durationFrame) {
+        /*
+            Calculer le vecteur direction:
+            https://reglecompas.fr/wp-content/uploads/2020/10/coord-trigo.png
+        */
+        let dx = Math.cos(this._direction); // cos(0) = 1 ; cos(pi) = -1 ; cos(pi/2) = 0.
+        let dy = Math.sin(this._direction) * -1; // sin(0) = 0 ; sin(pi) = 0 ; sin(pi/2) = 1 ; -1 car canvas inverse l'axe Y.
+        /* Multiplier la direction par la vitesse */
+        this._position.x += dx * this._speed / this._fps; // On divise par les fps car la fonction est appelée selon un fps donné (#cellGrid/seconde).
+        this._position.y += dy * this._speed / this._fps;
+        }
+
+    update = function() {
+        /* Calcul du deltaTime */
+        let currentTime = Date.now();
+        let deltaTime   = currentTime - this._startTime; // La durée entre deux appels (entre 2 frames).
+        this._lag += deltaTime;
+        this._startTime = currentTime;
+        this._timer += deltaTime;
+
+        /* Mettre à jour la logique si la variable _lag est supérieure ou égale à la durée d'une frame */
+        while (this._lag >= this._frameDuration) {
+            /* Mise à jour de la logique et de la vue */
+            this.move(this._frameDuration);
+            this.display(this.grid,this._position);
+            /* Réduire la variable _lag par la durée d'une frame */
+            this._lag -= this._frameDuration;
+        }
+
+        if (this._position.x < 1) {
+            requestAnimationFrame(this.update.bind(this)); // La fonction de rappel est généralement appelée 60 fois par seconde.
+        }
+
+        console.log(this._position, this._timer / 1000);
+        }
+
+
 }
 
 class View {
@@ -110,7 +160,9 @@ class View {
         this.togglePheromone();
     }
     
-    display(grid){
+    display(grid, position){
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
         let nbLines = grid.length;
         let nbColumns = grid[0].length;
         this.canvas.width = nbColumns * this.cellSize;
@@ -123,9 +175,9 @@ class View {
                 let tile = grid[i][j];
                 switch (tile.type) {
                     case "herbe":
-                        let randX = Math.floor(Math.random() * 8);
-                        let randY = Math.floor(Math.random() * 4);
-                        this.ctx.drawImage(GRASS_IMAGE, randX * 16, randY * 16, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
+                        let randX = 4 + i % 4;
+                        let randY = j % 4;
+                        this.ctx.drawImage(GRASS_IMAGE, randX * 32, randY * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
 
                         if (this.statusPheromone) {
                             this.ctx.font = "12px Arial";
@@ -157,6 +209,8 @@ class View {
                 }
             }
         }
+        this.ctx.fillRect(position.x * this.cellSize, position.y * this.cellSize, 25, 25);
+        console.log(position)
     }
 
     bindGetTime(callback) {
@@ -222,8 +276,8 @@ class Controller {
         this.model.play()
     }
 
-    bindDisplay(grid) {
-        this.view.display(grid)
+    bindDisplay(grid, position) {
+        this.view.display(grid,position)
     }
 
     bindDisplayTime(time) {
