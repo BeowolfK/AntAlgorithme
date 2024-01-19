@@ -60,7 +60,7 @@ class Model {
             [new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Nourriture(), new Arbre(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
             [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()]
         ];
-        this.time = "00:05";
+        this.time = "00:00";
     }
 
     bindDisplay(callback) {
@@ -75,9 +75,26 @@ class Model {
         this.displayTime = callback;
     }
 
-    getTime() {
-        console.log(this.time);
+    resetTime() {
+        this.time = "00:00";
         this.displayTime(this.time);
+    }
+
+    getTime() {
+        setInterval(() => { 
+            let time = this.time.split(":");
+            let minutes = parseInt(time[0]);
+            let seconds = parseInt(time[1]);    
+
+            seconds += 1;
+            if (seconds == 60) {
+                seconds = 0;
+                minutes += 1;
+            }
+
+            this.time = minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0');
+            this.displayTime(this.time);
+        }, 1000);
     }
 }
 
@@ -146,6 +163,10 @@ class View {
         this.getTime = callback;
     }
 
+    bindResetTime(callback) {
+        this.resetTime = callback;
+    }
+
     displayTime(time) {
         console.log(time);
         let clock = document.getElementById('clock');
@@ -153,13 +174,12 @@ class View {
     }
 
     toggleClock() {
-        let clock = document.getElementById('clock');
         let statusB = document.getElementById('toggle-time');
         statusB.addEventListener('click', () => {
             if (this.statusTime) {
                 this.statusTime = false;
                 statusB.innerHTML = "Start";
-                clock.innerHTML = "00:00";
+                this.resetTime();
             } else {
                 this.statusTime = true;
                 statusB.innerHTML = "Stop";
@@ -192,11 +212,14 @@ class Controller {
         
         this.bindDisplayTime = this.bindDisplayTime.bind(this);
         this.model.bindDisplayTime(this.bindDisplayTime);
-
+        
         this.bindGetTime = this.bindGetTime.bind(this);
         this.view.bindGetTime(this.bindGetTime);
 
-        this.model.play();
+        this.bindResetTime = this.bindResetTime.bind(this);
+        this.view.bindResetTime(this.bindResetTime);
+        
+        this.model.play()
     }
 
     bindDisplay(grid) {
@@ -209,6 +232,10 @@ class Controller {
 
     bindGetTime() {
         this.model.getTime();
+    }
+
+    bindResetTime() {
+        this.model.resetTime();
     }
 
 }
