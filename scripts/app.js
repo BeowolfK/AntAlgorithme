@@ -1,4 +1,4 @@
-class Arbre {
+        class Arbre {
     constructor() {
         this.type = "arbre";
     }
@@ -79,8 +79,11 @@ class Model {
     }
 
     play() {
-        this.display(this.grid, this._position);
-        generate_ant();
+        
+        this.generate_ant();
+
+        this.display(this.grid, this.ant1.position);
+        
         this.update();
     }
 
@@ -111,8 +114,8 @@ class Model {
     }
 
     generate_ant() {
-        ant1 = new Ant();
-        ant1.trajet(); 
+        this.ant1 = new Ant();
+        this.ant1.trajet_route(); 
     }
 
     move = function(durationFrame) {
@@ -140,7 +143,7 @@ class Model {
         while (this._lag >= this._frameDuration) {
             /* Mise à jour de la logique et de la vue */
             this.move(this._frameDuration);
-            this.display(this.grid,this._position);
+            this.display(this.grid,this.ant1.position);
             /* Réduire la variable _lag par la durée d'une frame */
             this._lag -= this._frameDuration;
         }
@@ -216,8 +219,9 @@ class View {
                 }
             }
         }
-        
-        this.ctx.fillRect(position.x * this.cellSize, position.y * this.cellSize, 25, 25);
+        console.log("Print : " + position.x + " " + position.y)
+        this.ctx.drawImage(ANT_IMAGE, position.x * this.cellSize, position.y * this.cellSize, this.cellSize, this.cellSize);
+        // this.ctx.fillRect(position.x * this.cellSize, position.y * this.cellSize, 25, 25);
         console.log(position)
     }
 
