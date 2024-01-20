@@ -80,6 +80,7 @@ class Model {
 
     play() {
         this.display(this.grid, this._position);
+        generate_ant();
         this.update();
     }
 
@@ -109,6 +110,11 @@ class Model {
         }, 1000);
     }
 
+    generate_ant() {
+        ant1 = new Ant();
+        ant1.trajet(); 
+    }
+
     move = function(durationFrame) {
         /*
             Calculer le vecteur direction:
@@ -121,6 +127,7 @@ class Model {
         this._position.y += dy * this._speed / this._fps;
         }
 
+    
     update = function() {
         /* Calcul du deltaTime */
         let currentTime = Date.now();
@@ -209,6 +216,7 @@ class View {
                 }
             }
         }
+        
         this.ctx.fillRect(position.x * this.cellSize, position.y * this.cellSize, 25, 25);
         console.log(position)
     }
