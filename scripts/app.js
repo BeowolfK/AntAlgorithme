@@ -135,8 +135,11 @@ class Model {
             // Utilisez dx et dy comme vous le souhaitez
             console.log(`Prochaine direction : dx = ${dx}, dy = ${dy}`);
              /* Multiplier la direction par la vitesse */
-            this.ant1.position.x += dx * this._speed / this._fps; // On divise par les fps car la fonction est appelée selon un fps donné (#cellGrid/seconde).
-            this.ant1.position.y += dy * this._speed / this._fps;
+            //this.ant1.position.x += dx * this._speed / this._fps; // On divise par les fps car la fonction est appelée selon un fps donné (#cellGrid/seconde).
+            //this.ant1.position.y += dy * this._speed / this._fps;
+            this.ant1.position.x += dx
+            this.ant1.position.y += dy
+            
             // Vous pouvez utiliser ces valeurs pour animer le déplacement de la fourmi, par exemple.
         } else {
             // Aucune direction valide trouvée
