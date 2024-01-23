@@ -84,18 +84,18 @@ class Model {
     getTime() {
         this.counter = setInterval(() => { 
             let time = this.time.split(":");
-            let minutes = parseInt(time[0]);
-            let seconds = parseInt(time[1]);
+            let seconds = parseInt(time[0]);
+            let microseconds = parseInt(time[1]);
 
-            seconds += 1;
-            if (seconds == 60) {
-                seconds = 0;
-                minutes += 1;
+            microseconds += 1;
+            if (microseconds == 100) {
+                microseconds = 0;
+                seconds += 1;
             }
 
-            this.time = minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0');
+            this.time = seconds.toString().padStart(2, '0') + ":" + microseconds.toString().padStart(2, '0');
             this.displayTime(this.time);
-        }, 1000);
+        }, 10);
     }
 }
 
