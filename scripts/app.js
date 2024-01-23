@@ -130,7 +130,6 @@ class Model {
         }, 10);
     }
 
-    // Fonction qui verifie la quantité de nourriture et arrete le jeu si il n'y en a plus
     checkNourriture() {
         let qty_nourriture = 0;
         for (let i = this.grid.length - 1; i >= 0; i--) {
@@ -144,7 +143,6 @@ class Model {
         if (qty_nourriture == 0) {
             this.stopTime();
         }
-        console.log("Nourriture : " + qty_nourriture);
     }
 }
 
