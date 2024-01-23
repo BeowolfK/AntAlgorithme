@@ -69,7 +69,7 @@ class Model {
         this._frameDuration = 1000 / this._fps;
         this._position      = {x: 9, y:10};
         this._cellSize      = 100; // La taille d'une cellule en pixel.
-        this._speed         = 1; // Nous voulons que 1 cellule (de notre grille) soit parcourue en 1 seconde (doit être dépendant des FPS fixés car la fonction est appelée à chaque frame). Notre unité de vitesse est donc "le nombre de cellules de la grille parcourues/seconde".
+        this._speed         = 10; // Nous voulons que 1 cellule (de notre grille) soit parcourue en 1 seconde (doit être dépendant des FPS fixés car la fonction est appelée à chaque frame). Notre unité de vitesse est donc "le nombre de cellules de la grille parcourues/seconde".
         this._direction     = 1; // En radian.
         this._timer         = 0;
         this._block         = true;  
@@ -138,9 +138,11 @@ class Model {
              /* Multiplier la direction par la vitesse */
             //this.ant1.position.x += dx * this._speed / this._fps; // On divise par les fps car la fonction est appelée selon un fps donné (#cellGrid/seconde).
             //this.ant1.position.y += dy * this._speed / this._fps;
-            this.ant1.position.x += Math.floor(dx * this._speed / this._fps); 
-            this.ant1.position.y += Math.floor(dy * this._speed / this._fps); 
-
+            console.log("Next case : "+ this.ant1.position.x + dx )
+            this.ant1.position.x += dx * this._speed / this._fps; 
+            this.ant1.position.y += dy * this._speed / this._fps; 
+            //this.ant1.position.x += dx; 
+            // this.ant1.position.y += dy; 
             this.ant1.trajet_route()
 
             // Vous pouvez utiliser ces valeurs pour animer le déplacement de la fourmi, par exemple.
@@ -180,6 +182,8 @@ class Model {
         if (this._block == true) {
             console.log("ici");
             requestAnimationFrame(this.update.bind(this)); // La fonction de rappel est généralement appelée 60 fois par seconde.
+            
+            
             if (this.ant1.trajet.length >= 10) {
                 const lastTenPositions = this.ant1.trajet.slice(-10);
                 if (lastTenPositions.every(pos => pos.x === lastTenPositions[0].x && pos.y === lastTenPositions[0].y)) {
@@ -257,7 +261,7 @@ class View {
             }
         }
         console.log("Print : " + position.x + " " + position.y)
-        this.ctx.drawImage(ANT_IMAGE, position.x * this.cellSize, position.y * this.cellSize, this.cellSize, this.cellSize);
+        this.ctx.drawImage(ANT_IMAGE, position.x * this.cellSize - this.cellSize / 2, position.y * this.cellSize - this.cellSize / 2, this.cellSize /2 , this.cellSize /2 );
         // this.ctx.fillRect(position.x * this.cellSize, position.y * this.cellSize, 25, 25);
         console.log("pos 240 " + position.x + " " + position.y)
     }
