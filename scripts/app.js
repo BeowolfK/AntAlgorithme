@@ -1,15 +1,18 @@
+// classe Arbre pour renvoyer un type d'objet
 class Arbre {
     constructor() {
         this.type = "arbre";
     }
 }
 
+// classe Colonie pour renvoyer un type d'objet
 class Colonie {
     constructor() {
         this.type = "colonie";
     }
 }
 
+// classe Herbe pour le type et les pheromones
 class Herbe {
     constructor() {
         this.type = "herbe";
@@ -25,6 +28,7 @@ class Herbe {
     }
 }
 
+// classe Nourriture pour le type et l'état
 class Nourriture {
     constructor() {
         this.type = "nourriture";
@@ -36,8 +40,9 @@ class Nourriture {
     }
 }
 
-
+// classe Model du MVC
 class Model {
+    // Constructeur du model qui initialise la grille et le temps
     constructor() {
         this.grid = [
             [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
@@ -60,27 +65,53 @@ class Model {
             [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()]
         
         ];
-        this.time = "00:00";
+        this.time = "00:00"; // Secondes:Microsecondes
     }
 
+    // Bindings pour l'affichage
     bindDisplay(callback) {
         this.display = callback;
     }
 
+    // Fonction qui lance le jeu
     play() {
         this.display(this.grid);
     }
 
+    // Bindings pour le temps 
     bindDisplayTime(callback) {
         this.displayTime = callback;
     }
 
+    // Fonction qui remet a zero toutes les cases
+    resetTile() {
+        for (let i = this.grid.length - 1; i >= 0; i--) {
+            for (let j = this.grid[i].length - 1; j >= 0; j--) {
+                let tile = this.grid[i][j];
+                if (tile.type == "herbe") {
+                    tile.pheromone = 0;
+                }
+                if (tile.type == "nourriture") {
+                    tile.etat = 100;
+                }
+            }
+        }
+    }
+
+    // Fonction qui met a zero le temps
     resetTime() {
         clearInterval(this.counter);
+        this.resetTile();
         this.time = "00:00";
         this.displayTime(this.time);
     }
 
+    // Fonction qui arrete le temps
+    stopTime() {
+        clearInterval(this.counter);
+    }
+
+    // Fonction qui lance le temps et démarrer la clock
     getTime() {
         this.counter = setInterval(() => { 
             let time = this.time.split(":");
@@ -95,11 +126,32 @@ class Model {
 
             this.time = seconds.toString().padStart(2, '0') + ":" + microseconds.toString().padStart(2, '0');
             this.displayTime(this.time);
+            this.checkNourriture();
         }, 10);
+    }
+
+    // Fonction qui verifie la quantité de nourriture et arrete le jeu si il n'y en a plus
+    checkNourriture() {
+        let qty_nourriture = 0;
+        for (let i = this.grid.length - 1; i >= 0; i--) {
+            for (let j = this.grid[i].length - 1; j >= 0; j--) {
+                let tile = this.grid[i][j];
+                if (tile.type == "nourriture") {
+                    qty_nourriture += tile.etat;
+                    tile.decrementEtat();
+                }
+            }
+        }
+        if (qty_nourriture == 0) {
+            this.stopTime();
+        }
+        console.log("Nourriture : " + qty_nourriture);
     }
 }
 
+// classe View du MVC
 class View {
+    // Constructeur de la vue qui initialise le canvas et les boutons
     constructor() {
         this.canvas = document.getElementById('my_canvas');
         this.ctx = this.canvas.getContext('2d');
@@ -110,7 +162,8 @@ class View {
         this.toggleClock();
         this.togglePheromone();
     }
-    
+
+    // Fonction qui affiche la grille avec les bonnes images
     display(grid){
         let nbLines = grid.length;
         let nbColumns = grid[0].length;
@@ -160,19 +213,23 @@ class View {
         }
     }
 
+    // Bindings pour le temps
     bindGetTime(callback) {
         this.getTime = callback;
     }
 
+    // Bindings pour le reset du temps
     bindResetTime(callback) {
         this.resetTime = callback;
     }
 
+    // Fonction qui affiche le temps
     displayTime(time) {
         let clock = document.getElementById('clock');
         clock.innerHTML = time;
     }
 
+    // Fonction qui lance ou arrete le temps en fonction du bouton
     toggleClock() {
         let statusB = document.getElementById('toggle-time');
         statusB.addEventListener('click', () => {
@@ -188,6 +245,7 @@ class View {
         });
     }
 
+    // Fonction qui change le type d'affichage des pheromones
     togglePheromone() {
         let statusP = document.getElementById('toggle-pheromone');
         statusP.addEventListener('click', () => {
@@ -201,6 +259,7 @@ class View {
         });
     }
 
+    // Fonction qui choisi la couleur en fonction de la valeur des pheromones
     colorChooser(value) {
         let color = "";
         if(value > 20){
@@ -229,24 +288,29 @@ class View {
 
 }
 
+// classe Controller du MVC
 class Controller {
+    // Constructeur du controller qui initialise le model, la vue, et les bindings
     constructor(model, view) {
         this.model = model
         this.view = view
 
-        this.model.bindDisplay(this.bindDisplay.bind(this))
-        
+        // Affectation pour les bindings
+
         this.bindDisplayTime = this.bindDisplayTime.bind(this);
         this.model.bindDisplayTime(this.bindDisplayTime);
         
         this.bindGetTime = this.bindGetTime.bind(this);
         this.view.bindGetTime(this.bindGetTime);
-
+        
         this.bindResetTime = this.bindResetTime.bind(this);
         this.view.bindResetTime(this.bindResetTime);
         
+        this.model.bindDisplay(this.bindDisplay.bind(this))
         this.model.play()
     }
+
+    // Fonction de bindings entre le model et la vue
 
     bindDisplay(grid) {
         this.view.display(grid)
@@ -257,7 +321,7 @@ class Controller {
     }
 
     bindGetTime() {
-            this.model.getTime();
+        this.model.getTime();
     }
 
     bindResetTime() {
@@ -266,6 +330,7 @@ class Controller {
 
 }
 
+// Initialisation des images
 const HEXTILES_IMAGE = new Image();
 HEXTILES_IMAGE.src = 'assets/foodAndColony.png';
 
