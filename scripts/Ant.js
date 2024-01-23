@@ -21,8 +21,9 @@ class Ant {
         return this.possiblePositions[randomIndex];
     }
     
-    trajet_route() {
-        this.trajet.push(this.position);
+    trajet_route() {            
+        console.log("Pos after movement : " + JSON.stringify(this.position))
+        this.trajet.push({...this.position});
         console.log("Trajet " + JSON.stringify(this.trajet));
     }
 
@@ -41,16 +42,17 @@ class Ant {
         const shuffledDirections = directions.sort(() => Math.random() - 0.5);
 
         for (const dir of shuffledDirections) {
-            const nextX = Math.floor(this.position.x) + dir.dx;
-            const nextY = Math.floor(this.position.y) + dir.dy;
+            const nextX = this.position.x + dir.dx;
+            const nextY = this.position.y + dir.dy;
     
             // Vérifier si la prochaine case est à l'intérieur de la matrice
             if (nextX >= 0 && nextX < grid.length && nextY >= 0 && nextY < grid[0].length) {
                 // Vérifier si la case est accessible et différente de la case précédente
                 
               //  if (grid[nextX][nextY].type !== "arbre" && grid[nextX][nextY].type !== "colonie" && (nextX !== previousPosition.x || nextY !== previousPosition.y)) {
-                if (grid[nextY][nextX] instanceof Herbe && (nextX !== previousPosition.x || nextY !== previousPosition.y)) {
-                    
+                if ((grid[nextY][nextX] instanceof Herbe || grid[nextY][nextX] instanceof Nourriture) && (nextX !== previousPosition.x || nextY !== previousPosition.y)) {
+                
+                    console.log("Next grid : " +  JSON.stringify(grid[nextX][nextY]))
                     // Enregistrez la nouvelle case comme la case précédente
                     
                     previousPosition.x = this.position.x;
