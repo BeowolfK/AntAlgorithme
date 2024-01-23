@@ -138,7 +138,6 @@ class Model {
                 let tile = this.grid[i][j];
                 if (tile.type == "nourriture") {
                     qty_nourriture += tile.etat;
-                    tile.decrementEtat();
                 }
             }
         }
