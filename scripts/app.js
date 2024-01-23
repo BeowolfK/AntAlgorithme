@@ -24,7 +24,9 @@ class Herbe {
     }
 
     decrementPheromone() {
-        this.pheromone -= 0.001;
+        if (this.pheromone > 0) {
+            this.pheromone -= 0.001;
+        }
     }
 }
 
@@ -127,6 +129,7 @@ class Model {
             this.time = seconds.toString().padStart(2, '0') + ":" + microseconds.toString().padStart(2, '0');
             this.displayTime(this.time);
             this.checkNourriture();
+            this.decrementAllPheromone();
         }, 10);
     }
 
@@ -142,6 +145,17 @@ class Model {
         }
         if (qty_nourriture == 0) {
             this.stopTime();
+        }
+    }
+
+    decrementAllPheromone() {
+        for (let i = this.grid.length - 1; i >= 0; i--) {
+            for (let j = this.grid[i].length - 1; j >= 0; j--) {
+                let tile = this.grid[i][j];
+                if (tile.type == "herbe") {
+                    tile.decrementPheromone();
+                }
+            }
         }
     }
 }
@@ -194,7 +208,7 @@ class View {
                         }
                         break;
                     case "arbre":
-                        this.ctx.drawImage(SHADOW_IMAGE, 0, 32, 128, 128, j * this.cellSize - 5, i * this.cellSize , this.cellSize, this.cellSize);
+                        this.ctx.drawImage(SHADOW_IMAGE, 0, 32, 128, 128, j * this.cellSize - 5, i * this.cellSize, this.cellSize, this.cellSize);
                         this.ctx.drawImage(TREE_IMAGE, 0, 0, 160, 160, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize); // 160x160
                         break;
                     case "nourriture":
