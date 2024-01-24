@@ -18,8 +18,16 @@ class Ant {
     next_etape(grid) {
         console.log("target : " + JSON.stringify(this.target) + " position : " + JSON.stringify(this.position));
 
+        const previousPosition = { x: Math.floor(this.position.x), y: Math.floor(this.position.y) };
 
-        if (this.target.x == Math.floor(this.position.x) && this.target.y == Math.floor(this.position.y)) {
+        if (this.target.x == previousPosition.x && this.target.y == previousPosition.y) {
+            let previousTile = grid[previousPosition.y][previousPosition.x];
+            if(previousTile.type === "herbe") {
+                previousTile.incrementPheromone();
+            } else if(previousTile.type === "nourriture" && previousTile.etat > 0) {
+                previousTile.decrementEtat();
+            }
+
             const directions = [
                 { dx: 0, dy: -1 }, // Haut
                 { dx: 0, dy: 1 },  // Bas
@@ -28,7 +36,6 @@ class Ant {
             ];
 
             // Enregistrez la case précédente
-            const previousPosition = { x: this.position.x, y: this.position.y };
 
             // Mélangez les directions de manière aléatoire
             const shuffledDirections = directions.sort(() => Math.random() - 0.5);
@@ -40,8 +47,6 @@ class Ant {
                 // Vérifier si la prochaine case est à l'intérieur de la matrice
                 if (nextX >= 0 && nextX < grid.length && nextY >= 0 && nextY < grid[0].length) {
                     // Vérifier si la case est accessible et différente de la case précédente
-
-                    //  if (grid[nextX][nextY].type !== "arbre" && grid[nextX][nextY].type !== "colonie" && (nextX !== previousPosition.x || nextY !== previousPosition.y)) {
                     if ((grid[nextY][nextX].type === "herbe" || grid[nextY][nextX].type === "nourriture") && (nextX !== previousPosition.x || nextY !== previousPosition.y)) {
 
                         console.log("Next grid : " + JSON.stringify(grid[nextY][nextX]));

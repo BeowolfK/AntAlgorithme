@@ -25,7 +25,9 @@ class Herbe {
 
     decrementPheromone() {
         if (this.pheromone > 0) {
-            this.pheromone -= 0.001;
+            this.pheromone -= 0.0001;
+        } else {
+            this.pheromone = 0;
         }
     }
 }
@@ -298,13 +300,15 @@ class View {
                         if (this.statusPheromone) {
                             this.ctx.font = "bold 14px Arial";
                             this.ctx.fillStyle = this.colorChooser(proportional);
-                            this.ctx.fillText(tile.pheromone, j * this.cellSize + 15, i * this.cellSize + this.cellSize / 2 + 6);
+                            this.ctx.fillText(tile.pheromone.toFixed(2), j * this.cellSize + 15, i * this.cellSize + this.cellSize / 2 + 6);
                         } else {
-                            this.ctx.beginPath();
-                            this.ctx.arc(j * this.cellSize + this.cellSize / 2, i * this.cellSize + this.cellSize / 2, proportional, 0, 2 * Math.PI);
-                            this.ctx.fillStyle = this.colorChooser(proportional);
-                            this.ctx.fill();
-                            this.ctx.closePath();
+                            if(tile.pheromone > 0) {
+                                this.ctx.beginPath();
+                                this.ctx.arc(j * this.cellSize + this.cellSize / 2, i * this.cellSize + this.cellSize / 2, Math.min(proportional, 22), 0, 2 * Math.PI);
+                                this.ctx.fillStyle = this.colorChooser(proportional);
+                                this.ctx.fill();
+                                this.ctx.closePath();
+                            }
                         }
                         break;
                     case "arbre":
@@ -312,7 +316,8 @@ class View {
                         this.ctx.drawImage(TREE_IMAGE, 0, 0, 160, 160, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize); // 160x160
                         break;
                     case "nourriture":
-                        this.ctx.drawImage(HEXTILES_IMAGE, 0 * 32, 14 * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
+                        let percent = this.cellSize * tile.etat / 100;
+                        this.ctx.drawImage(HEXTILES_IMAGE, 0 * 32, 14 * 32, 32, 32, j * this.cellSize + (this.cellSize - percent) / 2, i * this.cellSize + (this.cellSize - percent) / 2, percent, percent);
                         break;
                     case "colonie":
                         this.ctx.drawImage(HEXTILES_IMAGE, 1 * 32, 20 * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
