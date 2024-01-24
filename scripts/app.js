@@ -90,13 +90,7 @@ class Model {
 
     // Fonction qui lance le jeu
     play() {
-
-        this.generate_ant();
-
-        this.display(this.grid, this.ant1.position);
-
-        this.update();
-        console.log('Final road : ' + JSON.stringify(this.ant1.trajet))
+        this.display(this.grid);
     }
 
     // Bindings pour le temps 
@@ -138,6 +132,8 @@ class Model {
 
     // Fonction qui lance le temps et démarrer la clock
     getTime() {
+        this.generate_ant();
+        this.update();
         this.counter = setInterval(() => {
             let time = this.time.split(":");
             let seconds = parseInt(time[0]);
@@ -151,11 +147,10 @@ class Model {
 
             this.time = seconds.toString().padStart(2, '0') + ":" + microseconds.toString().padStart(2, '0');
             this.displayTime(this.time);
-            this.checkNourriture();
-            this.decrementAllPheromone();
         }, 10);
     }
 
+    // Fonction qui vérifie si il reste de la nourriture
     checkNourriture() {
         let qty_nourriture = 0;
         for (let i = this.grid.length - 1; i >= 0; i--) {
@@ -171,6 +166,7 @@ class Model {
         }
     }
 
+    // Fonction qui décrémente les pheromones de toutes les cases
     decrementAllPheromone() {
         for (let i = this.grid.length - 1; i >= 0; i--) {
             for (let j = this.grid[i].length - 1; j >= 0; j--) {
@@ -182,14 +178,14 @@ class Model {
         }
     }
 
+    // Fonction qui génère les fourmis
     generate_ant() {
         this.ant1 = new Ant();
         this.fourmis.push(this.ant1);
         this.ant1.trajet_route();
-
-        //this.ant1.next_etape(this.grid); 
     }
 
+    // Fonction qui déplace la fourmi
     move(durationFrame) {
         /*
             Calculer le vecteur direction:
@@ -238,21 +234,19 @@ class Model {
         while (this._lag >= this._frameDuration) {
 
             /* Mise à jour de la logique et de la vue */
-
             this.move(this._frameDuration);
             this.display(this.grid);
             this.displayAnt(this.ant1.position);
+            this.checkNourriture();
+            this.decrementAllPheromone();
             /* Réduire la variable _lag par la durée d'une frame */
             this._lag -= this._frameDuration;
-
         }
         console.log("check_pos : " + JSON.stringify(this.ant1.position.x))
 
         if (this._block == true) {
             console.log("ici");
             requestAnimationFrame(this.update.bind(this)); // La fonction de rappel est généralement appelée 60 fois par seconde.
-
-
             if (this.ant1.trajet.length >= 10) {
                 const lastTenPositions = this.ant1.trajet.slice(-10);
                 if (lastTenPositions.every(pos => pos.x === lastTenPositions[0].x && pos.y === lastTenPositions[0].y)) {
@@ -261,11 +255,8 @@ class Model {
                 }
             }
         }
-
         console.log(this.ant1.position, this._timer / 1000);
     }
-
-
 }
 
 // classe View du MVC
