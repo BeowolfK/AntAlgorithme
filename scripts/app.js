@@ -261,7 +261,7 @@ class View {
             }
         }
         console.log("Print : " + position.x + " " + position.y)
-        this.ctx.drawImage(ANT_IMAGE, position.x * this.cellSize - this.cellSize / 2, position.y * this.cellSize - this.cellSize / 2, this.cellSize /2 , this.cellSize /2 );
+        this.ctx.drawImage(ANT_IMAGE, position.x * this.cellSize , position.y * this.cellSize , this.cellSize /2 , this.cellSize /2 );
         // this.ctx.fillRect(position.x * this.cellSize, position.y * this.cellSize, 25, 25);
         console.log("pos 240 " + position.x + " " + position.y)
     }
