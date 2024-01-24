@@ -77,8 +77,8 @@ class Model {
         this._lag = 0;
         this._fps = 60; // Frame rate.
         this._frameDuration = 1000 / this._fps;
-        this._position = { x: 9, y: 10 };
-        this._cellSize = 100; // La taille d'une cellule en pixel.
+        this._position = { x: 9, y: 9 };
+        this._cellSize = 47; // La taille d'une cellule en pixel.
         this._speed = 10; // Nous voulons que 1 cellule (de notre grille) soit parcourue en 1 seconde (doit être dépendant des FPS fixés car la fonction est appelée à chaque frame). Notre unité de vitesse est donc "le nombre de cellules de la grille parcourues/seconde".
         this._direction = 1; // En radian.
         this._timer = 0;
@@ -119,23 +119,21 @@ class Model {
         }
     }
 
-    // Fonction qui met a zero le temps
+    // Fonction qui arrete le temps
     resetTime() {
         clearInterval(this.counter);
-        this.resetTile();
-        this.time = "00:00";
-        this.displayTime(this.time);
+        this._block = false;
     }
 
-    // Fonction qui arrete le temps
-    stopTime() {
-        clearInterval(this.counter);
-    }
-
+    
     // Fonction qui lance le temps et démarrer la clock
     getTime() {
+        this.time = "00:00";
+        this.displayTime(this.time);
+        this.resetTile();
         this.generate_ant();
         this.update();
+        this._block = true;
         this.counter = setInterval(() => {
             let time = this.time.split(":");
             let seconds = parseInt(time[0]);
@@ -164,7 +162,7 @@ class Model {
             }
         }
         if (qty_nourriture == 0) {
-            this.stopTime();
+            this.resetTime();
         }
     }
 
