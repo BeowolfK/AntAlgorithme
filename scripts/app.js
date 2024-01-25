@@ -134,7 +134,9 @@ class Model {
         this.displayTime(this.time);
         this.resetTile();
         this.generate_ant();
-        this.update();
+        //this.update();
+        this.display(this.grid);
+        this.displayAnt(this.ant1);
         this._block = true;
         this.counter = setInterval(() => {
             let time = this.time.split(":");
@@ -238,7 +240,7 @@ class Model {
             /* Mise à jour de la logique et de la vue */
             this.move(this._frameDuration);
             this.display(this.grid);
-            this.displayAnt(this.ant1.position);
+            this.displayAnt(this.ant1);
             this.checkNourriture();
             this.decrementAllPheromone();
             /* Réduire la variable _lag par la durée d'une frame */
@@ -329,8 +331,31 @@ class View {
         }
     }
 
-    displayAnt(position) {
-        this.ctx.drawImage(ANT_IMAGE, position.x * this.cellSize, position.y * this.cellSize, this.cellSize / 2, this.cellSize / 2);
+    displayAnt(ant) {
+        //this.ctx.save();
+        this.orientation(ant.direction)
+        this.ctx.drawImage(ANT_IMAGE, ant.position.x * this.cellSize, ant.position.y * this.cellSize, this.cellSize / 2, this.cellSize / 2);
+    }   
+
+    orientation(dir) {
+       if (dir == { dx: 0, dy: -1 }){
+        this.ctx.translate(this.cellSize * 19 - 10 , 0);
+
+        // Effectuez la rotation de 90 degrés
+        this.ctx.rotate(Math.PI /2);
+        
+
+       }; // Haut
+        if( dir == { dx: 0, dy: 1 }) {
+
+        }  // Bas
+        if (dir == { dx: 1, dy: 0 }) {
+
+        }  // Droite
+        if (dir =={ dx: -1, dy: 0 } ) {
+
+        }          // Gauche
+    
     }
 
     // Bindings pour le temps
