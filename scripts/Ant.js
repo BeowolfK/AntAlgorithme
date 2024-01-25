@@ -22,9 +22,8 @@ class Ant {
 
         if (this.target.x == previousPosition.x && this.target.y == previousPosition.y) {
             let previousTile = grid[previousPosition.y][previousPosition.x];
-            if(previousTile.type === "herbe") {
-                previousTile.incrementPheromone();
-            } else if(previousTile.type === "nourriture" && previousTile.etat > 0) {
+            
+            if(previousTile.type === "nourriture" && previousTile.etat > 0) {
                 previousTile.decrementEtat();
             }
 
@@ -34,6 +33,31 @@ class Ant {
                 { dx: 1, dy: 0 },  // Droite
                 { dx: -1, dy: 0 }  // Gauche
             ];
+
+            let proba = [];
+            const gamma = 1; // Coefficient de pondération
+            for(let dir of directions) {
+                const nextX = Math.floor(this.position.x + dir.dx);
+                const nextY = Math.floor(this.position.y + dir.dy);
+
+                if (nextX >= 0 && nextX < grid.length && nextY >= 0 && nextY < grid[0].length) {
+                    if (grid[nextY][nextX].type === "herbe") {
+                        proba += grid[nextY][nextX].pheromone;
+                    }
+                }
+            }
+            let i = 0;
+            for(let dir of directions) {
+                const nextX = Math.floor(this.position.x + dir.dx);
+                const nextY = Math.floor(this.position.y + dir.dy);
+
+                if (nextX >= 0 && nextX < grid.length && nextY >= 0 && nextY < grid[0].length) {
+                    if (grid[nextY][nextX].type === "herbe") {
+                        const probaDir = ( gamma + grid[nextY][nextX].pheromone ) / (( ));
+                        directions[i].proba = probaDir;
+                    }
+                }
+            }
 
             // Enregistrez la case précédente
 
@@ -75,5 +99,4 @@ class Ant {
         }
         // Aucune direction valide trouvée
     }
-
-}                                                                                                                                                                                                                            
+}

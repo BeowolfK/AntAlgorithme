@@ -25,7 +25,7 @@ class Herbe {
 
     decrementPheromone() {
         if (this.pheromone > 0) {
-            this.pheromone -= 0.0001;
+            this.pheromone -= this.pheromone * 0.001;
         } else {
             this.pheromone = 0;
         }
@@ -121,8 +121,10 @@ class Model {
 
     // Fonction qui arrete le temps
     resetTime() {
+        location.reload(); //debug purpose
         clearInterval(this.counter);
         this._block = false;
+
     }
 
     
