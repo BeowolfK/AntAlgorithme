@@ -199,6 +199,7 @@ class Model {
         // let dy = Math.sin(this._direction) * -1; // sin(0) = 0 ; sin(pi) = 0 ; sin(pi/2) = 1 ; -1 car canvas inverse l'axe Y.
 
         const nextDirection = this.ant1.next_etape(this.grid);
+        console.log("nextDirection : " + JSON.stringify(nextDirection))
         if (nextDirection !== null) {
             const { dx, dy } = nextDirection;
             // Utilisez dx et dy comme vous le souhaitez

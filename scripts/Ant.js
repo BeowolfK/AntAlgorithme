@@ -21,6 +21,7 @@ class Ant {
         const previousPosition = { x: Math.floor(this.position.x), y: Math.floor(this.position.y) };
 
         if (this.target.x == previousPosition.x && this.target.y == previousPosition.y) {
+            console.log("target reached");
             let previousTile = grid[previousPosition.y][previousPosition.x];
             
             if(previousTile.type === "nourriture" && previousTile.etat > 0) {
@@ -42,7 +43,7 @@ class Ant {
 
                 if (nextX >= 0 && nextX < grid.length && nextY >= 0 && nextY < grid[0].length) {
                     if (grid[nextY][nextX].type === "herbe") {
-                        proba += grid[nextY][nextX].pheromone;
+                        proba.push(grid[nextY][nextX].pheromone);
                     }
                 }
             }
@@ -53,46 +54,58 @@ class Ant {
 
                 if (nextX >= 0 && nextX < grid.length && nextY >= 0 && nextY < grid[0].length) {
                     if (grid[nextY][nextX].type === "herbe") {
-                        const probaDir = ( gamma + grid[nextY][nextX].pheromone ) / (( 4 * gamma ) + proba);
+                        let probaDir = ( gamma + grid[nextY][nextX].pheromone ) / (( proba.length * gamma ) + (proba.reduce((total, num) => total + num, 0)));
+
                         directions[i].proba = probaDir;
+                        console.log("probaDir : " + JSON.stringify(directions[i]));
+                        i++;
                     }
+                }
+            }
+
+            let random = Math.random();
+            let sum = 0;
+            for(let dir of directions) {
+                sum += dir.proba;
+                if (random <= sum) {
+                    console.log("dir : " + JSON.stringify(dir) );
+                    this.direction = dir;
+                    return dir;
                 }
             }
 
             // Enregistrez la case précédente
 
             // Mélangez les directions de manière aléatoire
-            const shuffledDirections = directions.sort(() => Math.random() - 0.5);
+            // const shuffledDirections = directions.sort(() => Math.random() - 0.5);
 
-            for (const dir of shuffledDirections) {
-                const nextX = Math.floor(this.position.x + dir.dx);
-                const nextY = Math.floor(this.position.y + dir.dy);
+            // for (const dir of shuffledDirections) {
+            //     const nextX = Math.floor(this.position.x + dir.dx);
+            //     const nextY = Math.floor(this.position.y + dir.dy);
 
-                // Vérifier si la prochaine case est à l'intérieur de la matrice
-                if (nextX >= 0 && nextX < grid.length && nextY >= 0 && nextY < grid[0].length) {
-                    // Vérifier si la case est accessible et différente de la case précédente
-                    if ((grid[nextY][nextX].type === "herbe" || grid[nextY][nextX].type === "nourriture") && (nextX !== previousPosition.x || nextY !== previousPosition.y)) {
+            //     // Vérifier si la prochaine case est à l'intérieur de la matrice
+            //     if (nextX >= 0 && nextX < grid.length && nextY >= 0 && nextY < grid[0].length) {
+            //         // Vérifier si la case est accessible et différente de la case précédente
+            //         if ((grid[nextY][nextX].type === "herbe" || grid[nextY][nextX].type === "nourriture") && (nextX !== previousPosition.x || nextY !== previousPosition.y)) {
 
-                        console.log("Next grid : " + JSON.stringify(grid[nextY][nextX]));
-                        // Enregistrez la nouvelle case comme la case précédente
+            //             console.log("Next grid : " + JSON.stringify(grid[nextY][nextX]));
+            //             // Enregistrez la nouvelle case comme la case précédente
 
-                        previousPosition.x = Math.floor(this.position.x);
-                        previousPosition.y = Math.floor(this.position.y);
-                        this.target = { x: nextX, y: nextY };
-                        // Retourner la direction de la prochaine case valide
-                        this.direction = dir;
-                        return dir;
-                    }
-                }
-            }
-        }
-        else {
+            //             previousPosition.x = Math.floor(this.position.x);
+            //             previousPosition.y = Math.floor(this.position.y);
+            //             this.target = { x: nextX, y: nextY };
+            //             // Retourner la direction de la prochaine case valide
+            //             this.direction = dir;
+            //             return dir;
+            //         }
+            //     }
+            // }
+        } else {
             const nextX = Math.floor(this.position.x + this.direction.dx);
             const nextY = Math.floor(this.position.y + this.direction.dy);
 
             if (nextX >= 0 && nextX < grid.length && nextY >= 0 && nextY < grid[0].length) {
                 if (grid[nextY][nextX].type === "herbe" || grid[nextY][nextX].type === "nourriture") {
-
                     return this.direction;
                 }
             }
