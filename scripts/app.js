@@ -158,6 +158,86 @@ class Model {
             }
         }
     }
+
+    // Fonction qui génère les fourmis
+    generate_ant() {
+        this.ant1 = new Ant();
+        this.fourmis.push(this.ant1);
+        this.ant1.trajet_route();
+    }
+
+    // Fonction qui déplace la fourmi
+    move(durationFrame) {
+        /*
+            Calculer le vecteur direction:
+            https://reglecompas.fr/wp-content/uploads/2020/10/coord-trigo.png
+        */
+        //let dx = Math.cos(this._direction); // cos(0) = 1 ; cos(pi) = -1 ; cos(pi/2) = 0.
+        // let dy = Math.sin(this._direction) * -1; // sin(0) = 0 ; sin(pi) = 0 ; sin(pi/2) = 1 ; -1 car canvas inverse l'axe Y.
+
+        const nextDirection = this.ant1.next_etape(this.grid);
+        console.log("nextDirection : " + JSON.stringify(nextDirection))
+        if (nextDirection !== null) {
+            const { dx, dy } = nextDirection;
+            // Utilisez dx et dy comme vous le souhaitez
+            console.log(`Prochaine direction : dx = ${dx}, dy = ${dy}`);
+            /* Multiplier la direction par la vitesse */
+            //this.ant1.position.x += dx * this._speed / this._fps; // On divise par les fps car la fonction est appelée selon un fps donné (#cellGrid/seconde).
+            //this.ant1.position.y += dy * this._speed / this._fps;
+            console.log("Next case : " + this.ant1.position.x + dx)
+            this.ant1.position.x += dx * this._speed / this._fps;
+            this.ant1.position.y += dy * this._speed / this._fps;
+            //this.ant1.position.x += dx; 
+            // this.ant1.position.y += dy; 
+
+            // Vous pouvez utiliser ces valeurs pour animer le déplacement de la fourmi, par exemple.
+        } else {
+            // Aucune direction valide trouvée
+            console.log("Aucune direction valide trouvée");
+        }
+
+
+
+    }
+
+
+    update() {
+        /* Calcul du deltaTime */
+
+        let currentTime = Date.now();
+        let deltaTime = currentTime - this._startTime; // La durée entre deux appels (entre 2 frames).
+        this._lag += deltaTime;
+        this._startTime = currentTime;
+        this._timer += deltaTime;
+
+        /* Mettre à jour la logique si la variable _lag est supérieure ou égale à la durée d'une frame */
+        console.log("_lag + _frameDuration" + this._lag + " " + this._frameDuration)
+        while (this._lag >= this._frameDuration) {
+
+            /* Mise à jour de la logique et de la vue */
+            this.move(this._frameDuration);
+            this.display(this.grid);
+            this.displayAnt(this.ant1.position);
+            this.checkNourriture();
+            this.decrementAllPheromone();
+            /* Réduire la variable _lag par la durée d'une frame */
+            this._lag -= this._frameDuration;
+        }
+        console.log("check_pos : " + JSON.stringify(this.ant1.position.x))
+
+        if (this._block == true) {
+            console.log("ici");
+            requestAnimationFrame(this.update.bind(this)); // La fonction de rappel est généralement appelée 60 fois par seconde.
+            if (this.ant1.trajet.length >= 10) {
+                const lastTenPositions = this.ant1.trajet.slice(-10);
+                if (lastTenPositions.every(pos => pos.x === lastTenPositions[0].x && pos.y === lastTenPositions[0].y)) {
+                    console.log("Les 10 dernières positions sont identiques. Arrêt du processus.");
+                    this._block = false;
+                }
+            }
+        }
+        console.log(this.ant1.position, this._timer / 1000);
+    }
 }
 
 // classe View du MVC
