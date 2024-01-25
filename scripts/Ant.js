@@ -53,7 +53,7 @@ class Ant {
 
                 if (nextX >= 0 && nextX < grid.length && nextY >= 0 && nextY < grid[0].length) {
                     if (grid[nextY][nextX].type === "herbe") {
-                        const probaDir = ( gamma + grid[nextY][nextX].pheromone ) / (( ));
+                        const probaDir = ( gamma + grid[nextY][nextX].pheromone ) / (( 4 * gamma ) + proba);
                         directions[i].proba = probaDir;
                     }
                 }
