@@ -334,20 +334,26 @@ class View {
     displayAnt(ant) {
         //this.ctx.save();
         this.orientation(ant.direction)
+        console.log(" direction " + JSON.stringify(ant.direction))
         this.ctx.drawImage(ANT_IMAGE, ant.position.x * this.cellSize, ant.position.y * this.cellSize, this.cellSize / 2, this.cellSize / 2);
     }   
 
     orientation(dir) {
-       if (dir == { dx: 0, dy: -1 }){
+        console.log(" x " + dir.dx + " y " + dir.dy);
+       if (dir.dx == 0 && dir.dy == -1 ){
         this.ctx.translate(this.cellSize * 19 - 10 , 0);
 
         // Effectuez la rotation de 90 degrés
         this.ctx.rotate(Math.PI /2);
-        
+
+      
 
        }; // Haut
-        if( dir == { dx: 0, dy: 1 }) {
+        if (dir.dx == 0 && dir.dy == 1 ) {
+            this.ctx.translate(10 , 0);
 
+        // Effectuez la rotation de 90 degrés
+         this.ctx.rotate( 2 * Math.PI /2);
         }  // Bas
         if (dir == { dx: 1, dy: 0 }) {
 
