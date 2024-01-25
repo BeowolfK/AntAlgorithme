@@ -2,7 +2,7 @@ class Ant {
     constructor() {
         this.speed = 1; 
         this.position = { x: 9, y: 9 };
-        this.direction = { dx: 0, dy: 1 };
+        this.direction = { dx: 0, dy: -1 };
         this.next_case = 0;
         this.trajet = [];
         this.target = this.position;
