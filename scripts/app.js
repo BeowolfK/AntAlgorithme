@@ -212,7 +212,6 @@ class Model {
             this.ant1.position.y += dy * this._speed / this._fps;
             //this.ant1.position.x += dx; 
             // this.ant1.position.y += dy; 
-            this.ant1.trajet_route()
 
             // Vous pouvez utiliser ces valeurs pour animer le déplacement de la fourmi, par exemple.
         } else {
@@ -241,7 +240,7 @@ class Model {
             /* Mise à jour de la logique et de la vue */
             this.move(this._frameDuration);
             this.display(this.grid);
-            this.displayAnt(this.ant1);
+            this.displayAnt(this.ant1.position);
             this.checkNourriture();
             this.decrementAllPheromone();
             /* Réduire la variable _lag par la durée d'une frame */
