@@ -16,11 +16,18 @@ class Ant {
     }
 
     next_etape(grid) {
-        console.log("target : " + JSON.stringify(this.target) + " position : " + JSON.stringify(this.position));
+        
+       // if (this.trajet.length > 1) {
+            //this.previousPosition = this.trajet[this.trajet.length - 1];
+       // }
+        //else {
+        //    this.previousPosition = this.trajet[this.trajet.length];    
+        //}
 
         let previousPosition = this.trajet[this.trajet.length - 1];
+        console.log("Trajet :: " + this.trajet[this.trajet.lenght - 1]); 
         console.log("before if")
-
+        console.log("target : " + JSON.stringify(this.target) + " position : " + JSON.stringify(previousPosition));
         if (this.target.x == previousPosition.x && this.target.y == previousPosition.y) {
             console.log("in if");
             let previousTile = grid[previousPosition.y][previousPosition.x];
@@ -105,7 +112,8 @@ class Ant {
             // }
         } else {
             console.log("in else");
-            return this.direction;
+            
+            //return this.direction;
             
             const nextX = Math.floor(this.position.x + this.direction.dx);
             const nextY = Math.floor(this.position.y + this.direction.dy);
