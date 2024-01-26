@@ -134,9 +134,9 @@ class Model {
         this.displayTime(this.time);
         this.resetTile();
         this.generate_ant();
-        //this.update();
-        this.display(this.grid);
-        this.displayAnt(this.ant1);
+        this.update();
+        //this.display(this.grid);
+        //this.displayAnt(this.ant1);
         this._block = true;
         this.counter = setInterval(() => {
             let time = this.time.split(":");
@@ -240,7 +240,7 @@ class Model {
             /* Mise à jour de la logique et de la vue */
             this.move(this._frameDuration);
             this.display(this.grid);
-            this.displayAnt(this.ant1.position);
+            this.displayAnt(this.ant1);
             this.checkNourriture();
             this.decrementAllPheromone();
             /* Réduire la variable _lag par la durée d'une frame */
@@ -333,7 +333,7 @@ class View {
 
     displayAnt(ant) {
         //this.ctx.save();
-        this.orientation(ant.direction)
+        //  this.orientation(ant.direction)
         console.log(" direction " + JSON.stringify(ant.direction))
         this.ctx.drawImage(ANT_IMAGE, ant.position.x * this.cellSize, ant.position.y * this.cellSize, this.cellSize / 2, this.cellSize / 2);
     }   
