@@ -49,7 +49,10 @@ class Model {
     // Constructeur du model qui initialise la grille et le temps
     constructor() {
         this.grid = [
-            [new Arbre(), new Arbre(), new Arbre()],
+            [new Arbre(), new Arbre(), new Arbre(), new Arbre()],
+            [new Arbre(), new Herbe(), new Herbe(), new Arbre()],
+            [new Arbre(), new Herbe(), new Herbe(), new Arbre()],
+            [new Arbre(), new Arbre(), new Arbre(), new Arbre()],
         ]
         // this.grid = [
         //     [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
@@ -124,9 +127,10 @@ class Model {
 
     // Fonction qui arrete le temps
     resetTime() {
-        location.reload(); //debug purpose
         clearInterval(this.counter);
         this._block = false;
+        // location.reload(); //debug purpose
+        
 
     }
 
@@ -217,7 +221,8 @@ class Model {
         }
         // console.log("check_pos : " + JSON.stringify(this.ant1.position.x))
 
-        if (this._block == true) {
+        // if (this._block == true) {
+            if (true) {
             // console.log("ici");
             requestAnimationFrame(this.update.bind(this)); // La fonction de rappel est généralement appelée 60 fois par seconde.
             if (this.ant1.trajet.length >= 10) {

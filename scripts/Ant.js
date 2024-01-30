@@ -1,12 +1,12 @@
 class Ant {
     constructor() {
         this.speed = 1;
-        this.position = { x: 9, y: 9 };
+        this.position = { x: 2.5, y: 1.5 };
         this.direction = { dx: 0, dy: 1 };
         this.next_case = 0;
         this.trajet = [];
-        this.target = { x: 9, y: 9 };
-        this.speed = 5;
+        this.target = { x: 1, y: 1 };
+        this.speed = 1
     }
 
     trajet_route() {
@@ -22,10 +22,10 @@ class Ant {
         // console.log("before if")
         if (this.target.x == Math.floor(this.position.x) && this.target.y == Math.floor(this.position.y)) {
             // console.log("in if");
-            let previousTile = grid[Math.floor(this.position.y)][Math.floor(this.position.x)];
+            let tile = grid[Math.floor(this.position.y)][Math.floor(this.position.x)];
 
-            if (previousTile.type === "nourriture" && previousTile.etat > 0) {
-                previousTile.decrementEtat();
+            if (tile.type === "nourriture" && tile.etat > 0) {
+                tile.decrementEtat();
             }
 
             const directions = [
@@ -44,9 +44,18 @@ class Ant {
                 if (nextX >= 0 && nextX < grid[0].length && nextY >= 0 && nextY < grid.length) {
                     if (grid[nextY][nextX].type === "herbe") {
                         proba.push(grid[nextY][nextX].pheromone);
+                        // console.log("nextX : " + nextX + " nextY : " + nextY);
+                        // console.log("type : " + grid[nextY][nextX].type);
+                        // console.log("proba : " + proba);
+                        // console.log("pheromone : " + grid[nextY][nextX].pheromone);
                     }
                 }
             }
+
+            console.log(this.position.x + " " + this.position.y);
+            console.log( JSON.stringify(proba));
+
+
             let i = 0;
             for (let dir of directions) {
                 const nextX = Math.floor(this.position.x + dir.dx);
@@ -59,20 +68,29 @@ class Ant {
 
                         directions[i].proba = probaDir;
                         // console.log("probaDir : " + JSON.stringify(directions[i]));
-                        i++;
                     }
+                    i++;
                 }
             }
 
+            console.log(JSON.stringify(directions));
+
             let random = Math.random();
+
+            
+
             let sum = 0;
             for (let dir of directions) {
+                if (dir.proba === undefined) {
+                    continue;
+                }
                 sum += dir.proba;
+                console.log("random : " + random, "sum : " + sum);
                 if (random <= sum) {
                     this.target.x = Math.floor(this.position.x + dir.dx);
                     this.target.y = Math.floor(this.position.y + dir.dy);
                     this.trajet.push({ ...this.target });
-                    console.log(directions);
+                    
                     console.log("target : " + JSON.stringify(this.target));
                     // debugger;
                     return this.target;
