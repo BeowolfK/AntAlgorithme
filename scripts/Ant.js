@@ -2,10 +2,10 @@ class Ant {
     constructor() {
         this.speed = 1; 
         this.position = { x: 9, y: 9 };
-        this.direction = { dx: 0, dy: 1 };
+        this.direction = { dx: 0, dy: 1};
         this.next_case = 0;
         this.trajet = [];
-        this.target = this.position;
+        this.target = { x: 9, y: 9 };
     }
 
     trajet_route() {
@@ -16,21 +16,12 @@ class Ant {
     }
 
     next_etape(grid) {
-        
-       // if (this.trajet.length > 1) {
-            //this.previousPosition = this.trajet[this.trajet.length - 1];
-       // }
-        //else {
-        //    this.previousPosition = this.trajet[this.trajet.length];    
-        //}
-
-        let previousPosition = this.trajet[this.trajet.length - 1];
-        console.log("Trajet :: " + this.trajet[this.trajet.lenght - 1]); 
+        // let previousPosition = this.trajet[this.trajet.length - 1];
+        // console.log("Trajet :: " + this.trajet[this.trajet.lenght - 1]); 
         console.log("before if")
-        console.log("target : " + JSON.stringify(this.target) + " position : " + JSON.stringify(previousPosition));
-        if (this.target.x == previousPosition.x && this.target.y == previousPosition.y) {
+        if (this.target.x == Math.floor(this.position.x) && this.target.y == Math.floor(this.position.y) ) {
             console.log("in if");
-            let previousTile = grid[previousPosition.y][previousPosition.x];
+            let previousTile = grid[Math.floor(this.position.y)][ Math.floor(this.position.x)];
             
             if(previousTile.type === "nourriture" && previousTile.etat > 0) {
                 previousTile.decrementEtat();
@@ -76,53 +67,24 @@ class Ant {
             for(let dir of directions) {
                 sum += dir.proba;
                 if (random <= sum) {
-                    console.log("dir : " + JSON.stringify(dir) );
-                    this.trajet.push({ ...this.direction });
-                    console.log("Trajet " + JSON.stringify(this.trajet));
-                    this.direction = dir;
-                    return this.direction;
+                    this.target.x = this.position.x + dir.dx;
+                    this.target.y = this.position.y + dir.dy;
+                    this.trajet.push({ ...this.target });
+                    console.log("target : " + JSON.stringify(this.target));
+                    return this.target;
                 }
             }
-
-            // Enregistrez la case précédente
-
-            // Mélangez les directions de manière aléatoire
-            // const shuffledDirections = directions.sort(() => Math.random() - 0.5);
-
-            // for (const dir of shuffledDirections) {
-            //     const nextX = Math.floor(this.position.x + dir.dx);
-            //     const nextY = Math.floor(this.position.y + dir.dy);
-
-            //     // Vérifier si la prochaine case est à l'intérieur de la matrice
-            //     if (nextX >= 0 && nextX < grid.length && nextY >= 0 && nextY < grid[0].length) {
-            //         // Vérifier si la case est accessible et différente de la case précédente
-            //         if ((grid[nextY][nextX].type === "herbe" || grid[nextY][nextX].type === "nourriture") && (nextX !== previousPosition.x || nextY !== previousPosition.y)) {
-
-            //             console.log("Next grid : " + JSON.stringify(grid[nextY][nextX]));
-            //             // Enregistrez la nouvelle case comme la case précédente
-
-            //             previousPosition.x = Math.floor(this.position.x);
-            //             previousPosition.y = Math.floor(this.position.y);
-            //             this.target = { x: nextX, y: nextY };
-            //             // Retourner la direction de la prochaine case valide
-            //             this.direction = dir;
-            //             return dir;
-            //         }
-            //     }
-            // }
         } else {
             console.log("in else");
-            
-            //return this.direction;
-            
-            const nextX = Math.floor(this.position.x + this.direction.dx);
-            const nextY = Math.floor(this.position.y + this.direction.dy);
+            return this.target;
 
-            if (nextX >= 0 && nextX < grid.length && nextY >= 0 && nextY < grid[0].length) {
-                if (grid[nextY][nextX].type === "herbe" || grid[nextY][nextX].type === "nourriture") {
-                    return this.direction;
-                }
-            }
+            // const nextX = Math.floor(this.position.x + this.direction.dx);
+            // const nextY = Math.floor(this.position.y + this.direction.dy);
+
+            // if (nextX >= 0 && nextX < grid.length && nextY >= 0 && nextY < grid[0].length) {
+            //     if (grid[nextY][nextX].type === "herbe" || grid[nextY][nextX].type === "nourriture") {
+            //     }
+            // }
         }
         // Aucune direction valide trouvée
     }

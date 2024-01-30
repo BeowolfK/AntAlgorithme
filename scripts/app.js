@@ -198,26 +198,35 @@ class Model {
    
 
         const nextDirection = this.ant1.next_etape(this.grid);
-        console.log("nextDirection : " + JSON.stringify(nextDirection))
-        if (nextDirection !== null) {
-            const { dx, dy } = nextDirection;
-            // Utilisez dx et dy comme vous le souhaitez
-            console.log(`Prochaine direction : dx = ${dx}, dy = ${dy}`);
-            /* Multiplier la direction par la vitesse */
-           
-            console.log("Next case : " + this.ant1.position.x + dx)
-            this.ant1.position.x += dx * this._speed / this._fps;
-            this.ant1.position.y += dy * this._speed / this._fps;
-           
+        console.log("nextDirection : " + JSON.stringify(nextDirection));
+        if (Object.keys(nextDirection).length !== 0) {
+            const {x, y } = nextDirection;
+            console.log(`Prochaine direction : dx = ${x}, dy = ${y}`);
 
-            // Vous pouvez utiliser ces valeurs pour animer le déplacement de la fourmi, par exemple.
-        } else {
-            // Aucune direction valide trouvée
-            console.log("Aucune direction valide trouvée");
+            let direction = Math.atan2(this.ant1.position.y - y, x - this.ant1.position.x);
+            console.log("direction : " + direction);
+            let destX = Math.cos(direction);
+            let destY = Math.sin(direction) * -1;
+            console.log("destX : " + destX + " destY : " + destY);
+
+            this.ant1.position.x += destX * this._speed / this._fps;
+            this.ant1.position.y += destY * this._speed / this._fps;
+            debugger;
+        
+        //     /* Multiplier la direction par la vitesse */
+        //     //this.ant1.position.x += dx * this._speed / this._fps; // On divise par les fps car la fonction est appelée selon un fps donné (#cellGrid/seconde).
+        //     //this.ant1.position.y += dy * this._speed / this._fps;
+        //     console.log("Next case : " + this.ant1.position.x + dx)
+        //     this.ant1.position.x += dx * this._speed / this._fps;
+        //     this.ant1.position.y += dy * this._speed / this._fps;
+        //     //this.ant1.position.x += dx; 
+        //     // this.ant1.position.y += dy; 
+
+        //     // Vous pouvez utiliser ces valeurs pour animer le déplacement de la fourmi, par exemple.
+        // } else {
+        //     // Aucune direction valide trouvée
+        //     console.log("Aucune direction valide trouvée");
         }
-
-
-
     }
 
 
@@ -329,8 +338,12 @@ class View {
     }
 
     displayAnt(ant) {
-       
-            this.ctx.drawImage(this.orientation(ant), ant.position.x * this.cellSize, ant.position.y * this.cellSize, this.cellSize / 2, this.cellSize / 2);
+        //this.ctx.save();
+        //  this.orientation(ant.direction)
+        console.log(" direction " + JSON.stringify(ant.direction))
+        console.log(" position " + JSON.stringify(ant.position))
+        
+        this.ctx.drawImage(ANT_IMAGE, ant.position.x * this.cellSize, ant.position.y * this.cellSize, this.cellSize / 2, this.cellSize / 2);
     }   
 
     orientation(ant) {
