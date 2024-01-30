@@ -195,8 +195,7 @@ class Model {
             Calculer le vecteur direction:
             https://reglecompas.fr/wp-content/uploads/2020/10/coord-trigo.png
         */
-        //let dx = Math.cos(this._direction); // cos(0) = 1 ; cos(pi) = -1 ; cos(pi/2) = 0.
-        // let dy = Math.sin(this._direction) * -1; // sin(0) = 0 ; sin(pi) = 0 ; sin(pi/2) = 1 ; -1 car canvas inverse l'axe Y.
+   
 
         const nextDirection = this.ant1.next_etape(this.grid);
         console.log("nextDirection : " + JSON.stringify(nextDirection))
@@ -205,13 +204,11 @@ class Model {
             // Utilisez dx et dy comme vous le souhaitez
             console.log(`Prochaine direction : dx = ${dx}, dy = ${dy}`);
             /* Multiplier la direction par la vitesse */
-            //this.ant1.position.x += dx * this._speed / this._fps; // On divise par les fps car la fonction est appelée selon un fps donné (#cellGrid/seconde).
-            //this.ant1.position.y += dy * this._speed / this._fps;
+           
             console.log("Next case : " + this.ant1.position.x + dx)
             this.ant1.position.x += dx * this._speed / this._fps;
             this.ant1.position.y += dy * this._speed / this._fps;
-            //this.ant1.position.x += dx; 
-            // this.ant1.position.y += dy; 
+           
 
             // Vous pouvez utiliser ces valeurs pour animer le déplacement de la fourmi, par exemple.
         } else {
@@ -282,7 +279,7 @@ class View {
 
         let nbLines = grid.length;
         let nbColumns = grid[0].length;
-        this.canvas.width = nbColumns * this.cellSize;
+        this.canvas.width = nbColumns * this.cellSize;  
         this.canvas.height = nbLines * this.cellSize;
         this.ctx.fillStyle = "#72751b";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -332,34 +329,28 @@ class View {
     }
 
     displayAnt(ant) {
-        //this.ctx.save();
-        //  this.orientation(ant.direction)
-        console.log(" direction " + JSON.stringify(ant.direction))
-        this.ctx.drawImage(ANT_IMAGE, ant.position.x * this.cellSize, ant.position.y * this.cellSize, this.cellSize / 2, this.cellSize / 2);
+       
+            this.ctx.drawImage(this.orientation(ant), ant.position.x * this.cellSize, ant.position.y * this.cellSize, this.cellSize / 2, this.cellSize / 2);
     }   
 
-    orientation(dir) {
-        console.log(" x " + dir.dx + " y " + dir.dy);
-       if (dir.dx == 0 && dir.dy == -1 ){
-        this.ctx.translate(this.cellSize * 19 - 10 , 0);
-
-        // Effectuez la rotation de 90 degrés
-        this.ctx.rotate(Math.PI /2);
-
-      
+    orientation(ant) {
+        console.log(" x " + ant.direction.dx + " y " + ant.direction.dy);
+       
+       
+       if (ant.direction.dx == 0 && ant.direction.dy == -1 ){
+        console.log("ici"); 
+            return ANT_TOP_IMAGE;
 
        }; // Haut
-        if (dir.dx == 0 && dir.dy == 1 ) {
-            this.ctx.translate(10 , 0);
-
-        // Effectuez la rotation de 90 degrés
-         this.ctx.rotate( 2 * Math.PI /2);
+        if (ant.direction.dx == 0 && ant.direction.dy == 1 ) {
+            return ANT_BOT_IMAGE;
         }  // Bas
-        if (dir == { dx: 1, dy: 0 }) {
-
+        if (ant.direction.dx == 1 && ant.direction.dy == 0 ) {
+            
+            return ANT_RIGHT_IMAGE;
         }  // Droite
-        if (dir =={ dx: -1, dy: 0 } ) {
-
+        if (ant.direction.dx == -1 && ant.direction.dy == 0 ) {
+            return ANT_IMAGE;
         }          // Gauche
     
     }
@@ -495,6 +486,14 @@ TREE_IMAGE.src = 'assets/tree.png';
 
 const ANT_IMAGE = new Image();
 ANT_IMAGE.src = 'assets/ant.png';
+
+const ANT_TOP_IMAGE = new Image();
+ANT_TOP_IMAGE.src = 'assets/ant_top.png';
+
+const ANT_BOT_IMAGE = new Image();
+ANT_BOT_IMAGE.src = 'assets/ant_bot.png';
+const ANT_RIGHT_IMAGE = new Image();
+ANT_RIGHT_IMAGE.src = 'assets/ant_right.png';
 
 const GRASS_IMAGE = new Image();
 GRASS_IMAGE.src = 'assets/grass.png';
