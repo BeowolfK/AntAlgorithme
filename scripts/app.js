@@ -203,7 +203,7 @@ class Model {
             const { x, y } = nextDirection;
             console.log(`Prochaine direction : dx = ${x}, dy = ${y}`);
 
-            let direction = Math.atan2(this.ant1.position.y - y, x - this.ant1.position.x);
+            let direction = Math.atan2(this.ant1.position.y - (y + 0.5), (x + 0.5) - this.ant1.position.x);
             console.log("direction : " + direction);
             let destX = Math.cos(direction);
             let destY = Math.sin(direction) * -1;
@@ -211,7 +211,7 @@ class Model {
 
             this.ant1.position.x += destX * this._speed / this._fps;
             this.ant1.position.y += destY * this._speed / this._fps;
-            debugger;
+           // debugger;
 
             //     /* Multiplier la direction par la vitesse */
             //     //this.ant1.position.x += dx * this._speed / this._fps; // On divise par les fps car la fonction est appelée selon un fps donné (#cellGrid/seconde).
@@ -364,7 +364,7 @@ class View {
         }  // Droite
         if (ant.direction.dx == -1 && ant.direction.dy == 0) {
             return ANT_IMAGE;
-        }          // Gauche
+        }  // Gauche
 
     }
 

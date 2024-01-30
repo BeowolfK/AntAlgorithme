@@ -67,10 +67,11 @@ class Ant {
             for(let dir of directions) {
                 sum += dir.proba;
                 if (random <= sum) {
-                    this.target.x = this.position.x + dir.dx;
-                    this.target.y = this.position.y + dir.dy;
+                    this.target.x = Math.floor(this.position.x + dir.dx);
+                    this.target.y = Math.floor(this.position.y + dir.dy);
                     this.trajet.push({ ...this.target });
                     console.log("target : " + JSON.stringify(this.target));
+                    debugger;
                     return this.target;
                 }
             }
