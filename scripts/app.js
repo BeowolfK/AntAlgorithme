@@ -127,7 +127,7 @@ class Model {
 
     }
 
-    
+
     // Fonction qui lance le temps et démarrer la clock
     getTime() {
         this.time = "00:00";
@@ -195,12 +195,12 @@ class Model {
             Calculer le vecteur direction:
             https://reglecompas.fr/wp-content/uploads/2020/10/coord-trigo.png
         */
-   
+
 
         const nextDirection = this.ant1.next_etape(this.grid);
         console.log("nextDirection : " + JSON.stringify(nextDirection));
         if (Object.keys(nextDirection).length !== 0) {
-            const {x, y } = nextDirection;
+            const { x, y } = nextDirection;
             console.log(`Prochaine direction : dx = ${x}, dy = ${y}`);
 
             let direction = Math.atan2(this.ant1.position.y - y, x - this.ant1.position.x);
@@ -212,20 +212,20 @@ class Model {
             this.ant1.position.x += destX * this._speed / this._fps;
             this.ant1.position.y += destY * this._speed / this._fps;
             debugger;
-        
-        //     /* Multiplier la direction par la vitesse */
-        //     //this.ant1.position.x += dx * this._speed / this._fps; // On divise par les fps car la fonction est appelée selon un fps donné (#cellGrid/seconde).
-        //     //this.ant1.position.y += dy * this._speed / this._fps;
-        //     console.log("Next case : " + this.ant1.position.x + dx)
-        //     this.ant1.position.x += dx * this._speed / this._fps;
-        //     this.ant1.position.y += dy * this._speed / this._fps;
-        //     //this.ant1.position.x += dx; 
-        //     // this.ant1.position.y += dy; 
 
-        //     // Vous pouvez utiliser ces valeurs pour animer le déplacement de la fourmi, par exemple.
-        // } else {
-        //     // Aucune direction valide trouvée
-        //     console.log("Aucune direction valide trouvée");
+            //     /* Multiplier la direction par la vitesse */
+            //     //this.ant1.position.x += dx * this._speed / this._fps; // On divise par les fps car la fonction est appelée selon un fps donné (#cellGrid/seconde).
+            //     //this.ant1.position.y += dy * this._speed / this._fps;
+            //     console.log("Next case : " + this.ant1.position.x + dx)
+            //     this.ant1.position.x += dx * this._speed / this._fps;
+            //     this.ant1.position.y += dy * this._speed / this._fps;
+            //     //this.ant1.position.x += dx; 
+            //     // this.ant1.position.y += dy; 
+
+            //     // Vous pouvez utiliser ces valeurs pour animer le déplacement de la fourmi, par exemple.
+            // } else {
+            //     // Aucune direction valide trouvée
+            //     console.log("Aucune direction valide trouvée");
         }
     }
 
@@ -288,7 +288,7 @@ class View {
 
         let nbLines = grid.length;
         let nbColumns = grid[0].length;
-        this.canvas.width = nbColumns * this.cellSize;  
+        this.canvas.width = nbColumns * this.cellSize;
         this.canvas.height = nbLines * this.cellSize;
         this.ctx.fillStyle = "#72751b";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -302,7 +302,7 @@ class View {
                         let randX = 4 + i % 4;
                         let randY = j % 4;
                         this.ctx.drawImage(GRASS_IMAGE, randX * 32, randY * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
-                        
+
                         let proportional = Math.log10(tile.pheromone * (10 - 1) + 1) * ((this.cellSize - 5) / 2);
 
                         if (this.statusPheromone) {
@@ -310,7 +310,7 @@ class View {
                             this.ctx.fillStyle = this.colorChooser(proportional);
                             this.ctx.fillText(tile.pheromone.toFixed(2), j * this.cellSize + 15, i * this.cellSize + this.cellSize / 2 + 6);
                         } else {
-                            if(tile.pheromone > 0) {
+                            if (tile.pheromone > 0) {
                                 this.ctx.beginPath();
                                 this.ctx.arc(j * this.cellSize + this.cellSize / 2, i * this.cellSize + this.cellSize / 2, Math.min(proportional, 22), 0, 2 * Math.PI);
                                 this.ctx.fillStyle = this.colorChooser(proportional);
@@ -342,30 +342,30 @@ class View {
         //  this.orientation(ant.direction)
         console.log(" direction " + JSON.stringify(ant.direction))
         console.log(" position " + JSON.stringify(ant.position))
-        
+
         this.ctx.drawImage(ANT_IMAGE, ant.position.x * this.cellSize, ant.position.y * this.cellSize, this.cellSize / 2, this.cellSize / 2);
-    }   
+    }
 
     orientation(ant) {
         console.log(" x " + ant.direction.dx + " y " + ant.direction.dy);
-       
-       
-       if (ant.direction.dx == 0 && ant.direction.dy == -1 ){
-        console.log("ici"); 
+
+
+        if (ant.direction.dx == 0 && ant.direction.dy == -1) {
+            console.log("ici");
             return ANT_TOP_IMAGE;
 
-       }; // Haut
-        if (ant.direction.dx == 0 && ant.direction.dy == 1 ) {
+        }; // Haut
+        if (ant.direction.dx == 0 && ant.direction.dy == 1) {
             return ANT_BOT_IMAGE;
         }  // Bas
-        if (ant.direction.dx == 1 && ant.direction.dy == 0 ) {
-            
+        if (ant.direction.dx == 1 && ant.direction.dy == 0) {
+
             return ANT_RIGHT_IMAGE;
         }  // Droite
-        if (ant.direction.dx == -1 && ant.direction.dy == 0 ) {
+        if (ant.direction.dx == -1 && ant.direction.dy == 0) {
             return ANT_IMAGE;
         }          // Gauche
-    
+
     }
 
     // Bindings pour le temps
