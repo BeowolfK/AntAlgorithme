@@ -23,7 +23,7 @@ class Model {
             [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()]
         ];
         this.time = "00:00"; // Secondes:Microsecondes
-        this.antNumber = 30;
+        this.antNumber = 1;
         this.fourmis = [];
 
         // Mouvement
@@ -33,7 +33,6 @@ class Model {
         this._frameDuration = 1000 / this._fps;
         this._position = { x: 9, y: 9 };
         this._cellSize = 47; // La taille d'une cellule en pixel.
-        this._speed = 5;
         this._direction = 1; // En radian.
         this._timer = 0;
         this._block = true;

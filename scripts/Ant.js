@@ -4,10 +4,11 @@ class Ant {
         this.position = { x: 9, y: 9 };
         this.direction = { dx: 0, dy: 1 };
         this.next_case = 0;
+        this.trajetDirection = [];
         this.trajet = [];
         this.trajetTotalLenght = 0;
         this.target = { x: 9, y: 9 };
-        this.speed = 10
+        this.speed = 2;
         this.return = false;
     }
 
@@ -27,6 +28,13 @@ class Ant {
 
             if (this.return && this.trajet.length > 0) {
                 this.target = this.trajet.pop();
+                this.direction = this.trajetDirection.pop();
+                if (this.direction === undefined) {
+                    this.direction = { dx: 0, dy: 1 };
+                }
+                this.direction.dx *= -1;
+                this.direction.dy *= -1;
+                console.log(this.trajet.length, this.trajetDirection.length);
                 let targetTile = grid[Math.floor(this.target.y)][Math.floor(this.target.x)];
                 if (targetTile.type === "herbe") {
                     targetTile.incrementPheromone(1 / this.trajetTotalLenght);
@@ -62,6 +70,7 @@ class Ant {
                         this.target.x = nextX
                         this.target.y = nextY
                         this.trajet = [{ x: nextX, y: nextY }]
+                        this.trajetDirection = [{ dx: dir.dx, dy: dir.dy }]
                     }
                 }
             }
@@ -98,6 +107,7 @@ class Ant {
                     this.target.x = maybeX;
                     this.target.y = maybeY;
                     this.trajet.push({ ...this.target });
+                    this.trajetDirection.push({ ...dir });
                     this.direction = dir;
                     return this.target;
                 }
