@@ -5,28 +5,53 @@ class Ant {
         this.direction = { dx: 0, dy: 1 };
         this.next_case = 0;
         this.trajet = [];
+        this.trajetTotalLenght = 0;
+        // this.trajetDirection = [{ dx: -1, dy: 0}];
         this.target = { x: 9, y: 9 };
         this.speed = 10
-    }
-
-    trajet_route() {
-
-        // // console.log("Current pos  : " + JSON.stringify(this.position))
-        this.trajet.push({ ...this.position });
-        // // console.log("Trajet " + JSON.stringify(this.trajet));
+        this.return = false;
     }
 
     next_etape(grid) {
-        // let previousPosition = this.trajet[this.trajet.length - 1];
-        // // console.log("Trajet :: " + this.trajet[this.trajet.lenght - 1]); 
-        // // console.log("before if")
         if (this.target.x == Math.floor(this.position.x) && this.target.y == Math.floor(this.position.y)) {
-            // // console.log("in if");
+            // console.log(JSON.stringify(this.trajet));
             let tile = grid[Math.floor(this.position.y)][Math.floor(this.position.x)];
 
             if (tile.type === "nourriture" && tile.etat > 0) {
                 tile.decrementEtat();
+                this.return = true;
+                this.trajetTotalLenght = this.trajet.length;
+                // this.trajetDirection = [{ dx: -1, dy: 0}];
             }
+
+            if (this.trajet.length === 0 && this.return) {
+                this.return = false;
+            }
+
+            if (this.return && this.trajet.length > 0) {
+                this.target = this.trajet.pop();
+                // console.log("trajet : " + JSON.stringify(this.trajet));
+                // debugger;
+                // this.direction = this.trajetDirection.pop();
+                // console.log(this.trajet.length, this.trajetDirection.length);
+                // this.direction.dx *= -1;
+                // this.direction.dy *= -1;
+                // this.direction = {dx : -1, dy : 0};
+                // console.log("direction : " + JSON.stringify(this.direction));
+                // console.log("-----------------------------")
+                // console.log(this.trajet.length);
+                // console.log("target : " + JSON.stringify(this.target));
+                // console.log(this.target.x, this.target.y);
+                let targetTile = grid[Math.floor(this.target.y)][Math.floor(this.target.x)];
+                // console.log("targetTile : " + JSON.stringify(targetTile));
+                if (targetTile.type === "herbe") {
+                    targetTile.incrementPheromone(1 / this.trajetTotalLenght);
+                }
+                // console.log("target : " + JSON.stringify(this.target));
+                return this.target;
+                
+            }
+
 
             const directions = [
                 { dx: 0, dy: -1 }, // Haut
@@ -42,13 +67,18 @@ class Ant {
                 const nextY = Math.floor(this.position.y + dir.dy);
 
                 if (nextX >= 0 && nextX < grid[0].length && nextY >= 0 && nextY < grid.length) {
-                    if (grid[nextY][nextX].type === "herbe") {
-                        proba.push(grid[nextY][nextX].pheromone);
-                    } else if (grid[nextY][nextX].type === "nourriture" && grid[nextY][nextX].etat > 0) {
+                    let tile = grid[nextY][nextX];
+                    if (tile.type === "herbe") {
+                        proba.push(tile.pheromone);
+                    } else if (tile.type === "nourriture" && tile.etat > 0) {
                         this.target.x = nextX
                         this.target.y = nextY
                         this.trajet.push({ ...this.target });
                         return this.target;
+                    } else if (tile.type === "colonie") {
+                        this.target.x = nextX
+                        this.target.y = nextY
+                        this.trajet = [{x: nextX, y: nextY}]
                     }
                 }
             }
@@ -86,19 +116,27 @@ class Ant {
                     continue;
                 }
                 sum += dir.proba;
-                // console.log("random : " + random, "sum : " + sum);
+                let maybeX = Math.floor(this.position.x + dir.dx);
+                let maybeY = Math.floor(this.position.y + dir.dy);
+                if (this.trajet.length > 0) {
+                    if (maybeX === this.trajet[this.trajet.length - 1].x && maybeY === this.trajet[this.trajet.length - 1].y) {
+                        continue;
+                    }
+                }
                 if (random <= sum) {
-                    this.target.x = Math.floor(this.position.x + dir.dx);
-                    this.target.y = Math.floor(this.position.y + dir.dy);
+                    this.target.x = maybeX;
+                    this.target.y = maybeY;
                     this.trajet.push({ ...this.target });
+                    // this.trajetDirection.push({ ...dir });
                     
                     // console.log("target : " + JSON.stringify(this.target));
                     // debugger;
+                    this.direction = dir;
                     return this.target;
                 }
             }
         } else {
-            // // console.log("in else");
+            // console.log("in else");
             return this.target;
 
             // const nextX = Math.floor(this.position.x + this.direction.dx);
@@ -117,7 +155,9 @@ class Ant {
         // debugger;
         const nextDirection = this.next_etape(grid);
         
-        // console.log("nextDirection : " + JSON.stringify(nextDirection));    
+        // console.log("nextDirection : " + JSON.stringify(nextDirection));
+        // console.log(this.trajet.length);
+
         if (Object.keys(nextDirection).length !== 0) {
             const { x, y } = nextDirection;
             // // console.log(`Prochaine direction : dx = ${x}, dy = ${y}`);

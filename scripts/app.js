@@ -19,13 +19,13 @@ class Herbe {
         this.pheromone = 0;
     }
 
-    incrementPheromone() {
-        this.pheromone += 0.01;
+    incrementPheromone(quota) {
+        this.pheromone += 10 * quota;
     }
 
     decrementPheromone() {
         if (this.pheromone > 0) {
-            this.pheromone -= this.pheromone * 0.001;
+            this.pheromone -= this.pheromone / 10000 ;
         } else {
             this.pheromone = 0;
         }
@@ -40,7 +40,7 @@ class Nourriture {
     }
 
     decrementEtat() {
-        this.etat -= 1;
+        this.etat -= 5;
     }
 }
 
@@ -48,12 +48,6 @@ class Nourriture {
 class Model {
     // Constructeur du model qui initialise la grille et le temps
     constructor() {
-        // this.grid = [
-        //     [new Arbre(), new Arbre(), new Arbre(), new Arbre()],
-        //     [new Arbre(), new Herbe(), new Herbe(), new Arbre()],
-        //     [new Arbre(), new Herbe(), new Herbe(), new Arbre()],
-        //     [new Arbre(), new Arbre(), new Arbre(), new Arbre()],
-        // ]
         this.grid = [
             [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
             [new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Herbe(), new Arbre(), new Herbe(), new Herbe(), new Herbe(), new Arbre(), new Arbre(), new Arbre(), new Arbre()],
@@ -75,6 +69,7 @@ class Model {
             [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()]
         ];
         this.time = "00:00"; // Secondes:Microsecondes
+        this.antNumber = 20;
         this.fourmis = [];
 
         // Mouvement
@@ -84,7 +79,7 @@ class Model {
         this._frameDuration = 1000 / this._fps;
         this._position = { x: 9, y: 9 };
         this._cellSize = 47; // La taille d'une cellule en pixel.
-        this._speed = 5; // Nous voulons que 1 cellule (de notre grille) soit parcourue en 1 seconde (doit être dépendant des FPS fixés car la fonction est appelée à chaque frame). Notre unité de vitesse est donc "le nombre de cellules de la grille parcourues/seconde".
+        this._speed = 5;
         this._direction = 1; // En radian.
         this._timer = 0;
         this._block = true;
@@ -128,7 +123,7 @@ class Model {
     resetTime() {
         clearInterval(this.counter);
         this._block = false;
-        location.reload(); //debug purpose
+        // location.reload(); //debug purpose   
         
 
     }
@@ -141,8 +136,9 @@ class Model {
         this.resetTile();
         this.generate_ant();
         this.update();
-        //this.display(this.grid);
-        //this.displayAnt(this.ant1);
+        if(!this._block){
+            location.reload();
+        }
         this._block = true;
         this.counter = setInterval(() => {
             let time = this.time.split(":");
@@ -171,9 +167,9 @@ class Model {
                 }
             }
         }
-        console.log("etat : " + qty_nourriture);
+        // console.log("etat : " + qty_nourriture);
         if (qty_nourriture == 0) {
-            console.log("Plus de nourriture");
+            // console.log("Plus de nourriture");
             clearInterval(this.counter);
             this._block = false;
         }
@@ -193,9 +189,10 @@ class Model {
 
     // Fonction qui génère les fourmis
     generate_ant() {
-        this.ant1 = new Ant();
-        this.fourmis.push(this.ant1);
-        this.ant1.trajet_route();
+        for (let i = 0; i < this.antNumber; i++) {
+            let ant = new Ant();
+            this.fourmis.push(ant);
+        }
     }
 
 
@@ -208,34 +205,23 @@ class Model {
         this._startTime = currentTime;
         this._timer += deltaTime;
 
-        /* Mettre à jour la logique si la variable _lag est supérieure ou égale à la durée d'une frame */
-        // // console.log("_lag + _frameDuration" + this._lag + " " + this._frameDuration)
         while (this._lag >= this._frameDuration) {
 
             /* Mise à jour de la logique et de la vue */
             this.checkNourriture();
             this.display(this.grid);
-            this.displayAnt(this.ant1);
-            this.ant1.move(this.grid, this._fps);
+            for (let i = 0; i < this.fourmis.length; i++) {
+                this.fourmis[i].move(this.grid, this._fps);
+                this.displayAnt(this.fourmis[i]);
+            }
             this.decrementAllPheromone();
             /* Réduire la variable _lag par la durée d'une frame */
             this._lag -= this._frameDuration;
         }
-        // // console.log("check_pos : " + JSON.stringify(this.ant1.position.x))
 
         if (this._block == true) {
-            // if (true) {
-            // // console.log("ici");
-            requestAnimationFrame(this.update.bind(this)); // La fonction de rappel est généralement appelée 60 fois par seconde.
-            if (this.ant1.trajet.length >= 10) {
-                const lastTenPositions = this.ant1.trajet.slice(-10);
-                if (lastTenPositions.every(pos => pos.x === lastTenPositions[0].x && pos.y === lastTenPositions[0].y)) {
-                    // // console.log("Les 10 dernières positions sont identiques. Arrêt du processus.");
-                    this._block = false;
-                }
-            }
+            requestAnimationFrame(this.update.bind(this));
         }
-        // // console.log(this.ant1.position, this._timer / 1000);
     }
 }
 
@@ -273,7 +259,7 @@ class View {
                         let randY = j % 4;
                         this.ctx.drawImage(GRASS_IMAGE, randX * 32, randY * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
 
-                        let proportional = Math.log10(tile.pheromone * (10 - 1) + 1) * ((this.cellSize - 5) / 2);
+                        let proportional = Math.log10(tile.pheromone * (10 - 1) + 1) * ((this.cellSize - 5) / 2)/2;
 
                         if (this.statusPheromone) {
                             this.ctx.font = "bold 14px Arial";
@@ -295,47 +281,41 @@ class View {
                         break;
                     case "nourriture":
                         let percent = this.cellSize * tile.etat / 100;
+                        if (percent == 0 ) {
+                            percent = 0;
+                        } else if (percent < 15) {
+                            percent = 15;
+                        }
+
                         this.ctx.drawImage(HEXTILES_IMAGE, 0 * 32, 14 * 32, 32, 32, j * this.cellSize + (this.cellSize - percent) / 2, i * this.cellSize + (this.cellSize - percent) / 2, percent, percent);
                         break;
                     case "colonie":
                         this.ctx.drawImage(HEXTILES_IMAGE, 1 * 32, 20 * 32, 32, 32, j * this.cellSize, i * this.cellSize, this.cellSize, this.cellSize);
                         break;
                     default:
-                        // // console.error("Error: Invalid tile - " + tile);
+                        console.error("Error: Invalid tile - " + tile);
                 }
             }
         }
     }
 
     displayAnt(ant) {
-        //this.ctx.save();
-        //  this.orientation(ant.direction)
-        // // console.log(" direction " + JSON.stringify(ant.direction))
-        // // console.log(" position " + JSON.stringify(ant.position))
-
-        this.ctx.drawImage(ANT_IMAGE, ant.position.x * this.cellSize, ant.position.y * this.cellSize, this.cellSize / 2, this.cellSize / 2);
+        let image = this.orientation(ant);
+        this.ctx.drawImage(image, ant.position.x * this.cellSize, ant.position.y * this.cellSize, this.cellSize / 2, this.cellSize / 2);
     }
 
     orientation(ant) {
-        // // console.log(" x " + ant.direction.dx + " y " + ant.direction.dy);
-
-
-        if (ant.direction.dx == 0 && ant.direction.dy == -1) {
-            // console.log("ici");
+        let dx = ant.direction.dx;
+        let dy = ant.direction.dy;
+        if (dx == 0 && dy == -1) {
             return ANT_TOP_IMAGE;
-
-        }; // Haut
-        if (ant.direction.dx == 0 && ant.direction.dy == 1) {
+        }else if (dx == 0 && dy == 1) {
             return ANT_BOT_IMAGE;
-        }  // Bas
-        if (ant.direction.dx == 1 && ant.direction.dy == 0) {
-
+        }else if (dx == 1 && dy == 0) {
             return ANT_RIGHT_IMAGE;
-        }  // Droite
-        if (ant.direction.dx == -1 && ant.direction.dy == 0) {
+        }else {
             return ANT_IMAGE;
-        }  // Gauche
-
+        }
     }
 
     // Bindings pour le temps
