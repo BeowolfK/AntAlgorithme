@@ -12,6 +12,7 @@ class View {
         this.togglePheromone();
     }
 
+    // Fonction qui affiche la grille et les cases en fonction de leur type
     display(grid) {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -72,11 +73,13 @@ class View {
         }
     }
 
+    // Fonction qui affiche les fourmis
     displayAnt(ant) {
         let image = this.orientation(ant);
         this.ctx.drawImage(image, ant.position.x * this.cellSize, ant.position.y * this.cellSize, this.cellSize / 2, this.cellSize / 2);
     }
 
+    // Fonction qui choisi l'image en fonction de l'orientation de la fourmi
     orientation(ant) {
         let dx = ant.direction.dx;
         let dy = ant.direction.dy;

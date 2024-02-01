@@ -23,7 +23,7 @@ class Model {
             [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()]
         ];
         this.time = "00:00"; // Secondes:Microsecondes
-        this.antNumber = 20;
+        this.antNumber = 30;
         this.fourmis = [];
 
         // Mouvement
@@ -149,6 +149,7 @@ class Model {
     }
 
 
+    // Fonction qui fait tourner la clock de jeu
     update() {
         /* Calcul du deltaTime */
         let currentTime = Date.now();
