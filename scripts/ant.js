@@ -8,7 +8,7 @@ class Ant {
         this.trajet = [];
         this.trajetTotalLenght = 0;
         this.target = { x: 9, y: 9 };
-        this.speed = 2;
+        this.speed = 7;
         this.return = false;
     }
 

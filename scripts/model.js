@@ -23,7 +23,7 @@ class Model {
             [new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre(), new Arbre()]
         ];
         this.time = "00:00"; // Secondes:Microsecondes
-        this.antNumber = 1;
+        this.antNumber = 30;
         this.fourmis = [];
 
         // Mouvement
