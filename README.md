@@ -1,17 +1,23 @@
 # AntAlgorithme
 
+## Description
+
+L'objectif de ce projet est de simuler un algorithme de fourmis.
+Il a été réalisé dans le cadre de l'initation au developpement WEB par Victor BLAAS et Kénan MEYLAN.
+Il peut etre lancer depuis un serveur web ou directement dans un navigateur a votre convenance.
+
 ## ToDoList
 
 - [x] Create canvas
-- [ ] Bind time and pheromone button
-- [ ] Create clock
-- [ ] Create ant
-- [ ] Implement ant algorithm
+- [x] Bind time and pheromone button
+- [x] Create clock
+- [x] Create ant
+- [x] Implement ant algorithm
 
 
-### Algorithme des fourmis
+## Algorithme des fourmis
 
-#### Exploration
+### Exploration
 
 1) On crée une pile vide pour les position
 2) On récupere la position initiale de la fourmi et on empile
@@ -27,7 +33,7 @@
 10) Si non, on continue a l'étape 8
 11) Lorsque la case voisine d'une fourmi est une case nourriture, on passe a l'étape de retour
 
-#### Retour
+### Retour
 
 1) On dépose une quantité de phréromone sur la case : 
     - `Quantité = omega / distance`
